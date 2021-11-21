@@ -1,6 +1,15 @@
+---<Sound>---
+--Sound = Instance.new("Sound",game.Workspace)
+--Sound.SoundId = "rbxassetid://6887181639"
+--Sound.Volume = 1
+--Sound.Playing = true
+--wait(3)
+--Sound:Destroy()
+---<End>---
+
 function CreateNotification(vText, vDuration, vButton)
     game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "Ninelives v1.7.1",
+        Title = "Ninelives v1.7.3",
         Text = vText,
         Duration = vDuration,
         Button1 = vButton
@@ -165,7 +174,24 @@ local FovChangerTextBox = Instance.new("TextBox",FovChangerToggle)
 local FovChangerLabel = Instance.new("TextLabel",FovChangerToggle)
 local FovTextBoxLabel = Instance.new("TextLabel", FovChangerTextBox)
 
-local RageCrashButton = Instance.new("TextButton",RageTab)
+--<Console>--
+local Console = Instance.new("ScreenGui",Folder)
+
+local ConsoleToggle = Instance.new("TextButton",MiscTab)
+local ConsoleToggleLabel = Instance.new("TextLabel",ConsoleToggle)
+
+local MainFrame = Instance.new("Frame",Console)
+local MainFrameRound = Instance.new("UICorner",MainFrame)
+local MainFrameTitle = Instance.new("TextLabel",MainFrame)
+local MainFrameLine = Instance.new("Frame",MainFrameTitle)
+
+local ConsoleSpace = Instance.new("ScrollingFrame",MainFrame)
+
+local CmdTextBox = Instance.new("TextBox",MainFrame)
+
+local CommandsList = Instance.new("TextLabel",Console)
+local CommandsListClose = Instance.new("TextButton",CommandsList)
+--<End>--
 
 ---<Main Variables>---
 local VectorCenter = Vector2.new(0.5, 0.5)
@@ -191,6 +217,7 @@ local Orange = Color3.fromRGB(255, 165, 0)
 local lBlack = Color3.fromRGB(25, 25, 25)
 local dWhite = Color3.fromRGB(230, 230, 230)
 local lGrey = Color3.fromRGB(150, 150, 150)
+local Shadow = Color3.fromRGB(46, 26, 71)
 local CurrentColor = Pink
 local CurrentMode = lBlack
 local CurrentText = White
@@ -213,6 +240,9 @@ local LightMode = false
 local TeamCheck = true
 local CustomFovEnabled = false
 local CustomFov = 70
+
+local NameIndex = 1
+local PosIndex = 0.02
 
 ---<Main Properties>---
 Folder.Name = ""..rTable[math.random(1,#rTable)]..rTable[math.random(1,#rTable)]..rTable[math.random(1,#rTable)]..rTable[math.random(1,#rTable)]..rTable[math.random(1,#rTable)]..""
@@ -246,7 +276,7 @@ WatermarkBackground.BorderColor3 = CurrentColor
 WatermarkBackground.TextScaled = true
 WatermarkBackground.TextColor3 = White
 WatermarkBackground.Font = Enum.Font.RobotoCondensed
-WatermarkBackground.Text = "Ninelives v1.7.1 | "..Plr.Name..""
+WatermarkBackground.Text = "Ninelives v1.7.3 | "..Plr.Name..""
 DrawnCrosshair.Name = "DrawnCrosshair"
 DrawnCrosshair.AnchorPoint = VectorCenter
 DrawnCrosshair.Position = UDimCenter
@@ -281,7 +311,7 @@ function CreateHeader(Variable, vName, vText, PosY, SizeY)
     Variable.Text = vText
 end
 
-CreateHeader(HomeHeader, "HomeHeader", "Ninelives v1.7.1", 0.1, 75)
+CreateHeader(HomeHeader, "HomeHeader", "Ninelives v1.7.3", 0.1, 75)
 
 function CreateDrawLine(Variable, vName)
     Variable.Name = vName
@@ -293,6 +323,165 @@ function CreateDrawLine(Variable, vName)
 end
 
 CreateDrawLine(HomeDrawLine, "HomeDrawLine")
+
+--<Console>--
+function CreateLine(vText, vColor, PosY, vParent)
+    NewLine = Instance.new("TextLabel",vParent)
+
+    NewLine.Name = "Line "..NameIndex..""
+    NewLine.AnchorPoint = Vector2.new(0.5, 0.5)
+    NewLine.Position = UDim2.new(0.5, 0, PosY, 0)
+    NewLine.Size = UDim2.new(0.95, 0, 0.05, 0)
+    NewLine.BackgroundTransparency = 1
+    NewLine.TextWrapped = true
+    NewLine.TextXAlignment = Enum.TextXAlignment.Left
+    NewLine.TextColor3 = Color3.new(vColor, vColor, vColor)
+    NewLine.TextSize = 10
+    NewLine.Text = vText
+
+    return NewLine
+end
+
+CreateLine("- cmds for commands", 0.5, PosIndex, ConsoleSpace)
+PosIndex = PosIndex + 0.02
+
+Console.Name = "Console"
+Console.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+Console.ResetOnSpawn = false
+
+MainFrame.Name = "MainFrame"
+MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+MainFrame.Size = UDim2.new(0, 300, 0, 250)
+MainFrame.BackgroundTransparency = 0.5
+MainFrame.BackgroundColor3 = Color3.new(0, 0, 0)
+MainFrame.BorderSizePixel = 3
+MainFrame.BorderColor3 = Color3.new(0.9, 0.9, 0.9)
+MainFrame.Visible = false
+MainFrame.Active = true
+MainFrame.Draggable = true
+MainFrame.ZIndex = 5
+
+MainFrameTitle.Name = "MainFrameTitle"
+MainFrameTitle.AnchorPoint = Vector2.new(0.5, 0.5)
+MainFrameTitle.Position = UDim2.new(0.5, 0, 0.05, 0)
+MainFrameTitle.Size = UDim2.new(1, 0, 0.05, 0)
+MainFrameTitle.BackgroundTransparency = 1
+MainFrameTitle.TextColor3 = Color3.new(1, 1, 1)
+MainFrameTitle.TextSize = 6
+MainFrameTitle.Text = "Console"
+
+MainFrameLine.Name = "MainFrameLine"
+MainFrameLine.AnchorPoint = Vector2.new(0.5, 0.5)
+MainFrameLine.Position = UDim2.new(0.5, 0, 1.5, 0)
+MainFrameLine.Size = UDim2.new(0, 300, 0, 1)
+MainFrameLine.BorderSizePixel = 0
+MainFrameLine.BackgroundColor3 = Color3.new(1, 1, 1)
+
+ConsoleSpace.Name = "ConsoleSpace"
+ConsoleSpace.AnchorPoint = Vector2.new(0.5, 0.5)
+ConsoleSpace.Position = UDim2.new(0.5, 0, 0.5, 0)
+ConsoleSpace.Size = UDim2.new(1, 0, 0.8, 0)
+ConsoleSpace.BackgroundTransparency = 1
+ConsoleSpace.BorderSizePixel = 0
+ConsoleSpace.CanvasSize = UDim2.new(0, 0, 4, 0)
+
+CmdTextBox.Name = "CmdTextBox"
+CmdTextBox.AnchorPoint = Vector2.new(0.5, 0.5)
+CmdTextBox.Position = UDim2.new(0.5, 0, 0.95, 0)
+CmdTextBox.Size = UDim2.new(0.9, 0, 0.05, 0)
+CmdTextBox.BackgroundTransparency = 1
+CmdTextBox.TextColor3 = Color3.new(1, 1, 1)
+CmdTextBox.TextSize = 10
+CmdTextBox.TextXAlignment = Enum.TextXAlignment.Left
+CmdTextBox.TextWrapped = true
+CmdTextBox.Text = ""
+CmdTextBox.PlaceholderText = "Enter cmd here..."
+CmdTextBox.FocusLost:Connect(function()
+    CreateLine("- "..CmdTextBox.Text.."", 1, PosIndex, ConsoleSpace)
+    NameIndex = NameIndex + 1
+    PosIndex = PosIndex + 0.02
+    CmdTextBox.Text = ""
+
+    if NewLine.Text == "- clear" then
+
+        for _,v in pairs (ConsoleSpace:GetChildren()) do
+            v:Destroy()
+            PosIndex = 0.02
+        end
+
+    elseif NewLine.Text == "- cmds" then
+
+        CommandsList.Visible = true
+
+    elseif NewLine.Text == "- shadow" then
+
+        CurrentColor = Shadow
+        i = 2
+        i2 = 2
+        ColorUpdate()
+        i = 1
+        i2 = 1
+
+    elseif NewLine.Text == "- refresh names" then
+
+        RefreshNameEsp()
+
+    elseif NewLine.Text == "- refresh boxes" then
+
+        RefreshBoxEsp()
+
+    elseif NewLine.Text == "- refresh chams" then
+
+        UpdateChams()
+
+    elseif NewLine.Text == "- refresh health" then
+
+        RefreshHealthEsp()
+
+    elseif NewLine.Text == "- crash" then
+
+        while true do
+        end
+
+    end
+end)
+
+CommandsList.Name = "CommandsList"
+CommandsList.AnchorPoint = Vector2.new(0.5, 0.5)
+CommandsList.Position = UDim2.new(0.5, 0, 0.5, 0)
+CommandsList.Size = UDim2.new(0, 300, 0, 600)
+CommandsList.Visible = false
+CommandsList.BackgroundTransparency = 0.5
+CommandsList.BackgroundColor3 = Color3.new(0, 0, 0)
+CommandsList.TextYAlignment = Enum.TextYAlignment.Top
+CommandsList.TextColor3 = Color3.new(1, 1, 1)
+CommandsList.Text = "- Commands -"
+CommandsList.Active = true
+CommandsList.Draggable = true
+
+CommandsListClose.Name = "CommandsListClose"
+CommandsListClose.AnchorPoint = Vector2.new(0.5, 0.5)
+CommandsListClose.Position = UDim2.new(0.94, 0, 0.03, 0)
+CommandsListClose.Size = UDim2.new(0, 25, 0, 25)
+CommandsListClose.BackgroundColor3 = Color3.new(1, 0, 0)
+CommandsListClose.BorderColor3 = Color3.new(1, 1, 1)
+CommandsListClose.BorderSizePixel = 2
+CommandsListClose.TextColor3 = Color3.new(1, 1, 1)
+CommandsListClose.Text = "X"
+CommandsListClose.MouseButton1Click:Connect(function()
+    CommandsList.Visible = false
+end)
+
+CreateLine("cmds| Shows commands list", 1, 0.04, CommandsList)
+CreateLine("clear| Clears console space", 1, 0.08, CommandsList)
+CreateLine("shadow| Changes menu color to secret color", 1, 0.12, CommandsList)
+CreateLine("refresh names| Refreshes name esp", 1, 0.16, CommandsList)
+CreateLine("refresh boxes| Refreshes box esp", 1, 0.2, CommandsList)
+CreateLine("refresh chams| Refreshes chams esp", 1, 0.24, CommandsList)
+CreateLine("refresh health| Refreshes health esp", 1, 0.28, CommandsList)
+CreateLine("crash| crashes local game", 1, 0.32, CommandsList)
+--<End>--
 
 --<Avatar/Welcoming>--
 WelcomeLabel.Name = "WelcomeLabel"
@@ -329,7 +518,7 @@ ChangeLog.Size = UDim2.new(0, 350, 0, 500)
 ChangeLog.BorderSizePixel = 2
 ChangeLog.BackgroundColor3 = White
 ChangeLog.BorderColor3 = Black
-ChangeLog.Text = "Ninelives v1.7.1 \n Built 11.20.21 \n \n Major code optimization, added HomeFrame, major debugging, added loading system with whitelists, disabled whitelist for now, esp is almost finished, made boxes way thicker, added change log, removed bananna knife due to detection, working on aimbot. Currently very buggy!  Issues: Esp is very buggy (Mostly fixed now), do not change color/refresh esp/change opacity without enabling the feature you are changing first, if you have problems click refresh esp and go from there, chat spammer spams multiple times after reenabling, crosshair draws over menu when enabled for the first time. \n \n Credits: \n Jcat (Coder) \n irc7 (Teaching me how to make ESP) \n Anyone I pasted from (Skin changer and Mod weapon)"
+ChangeLog.Text = "Ninelives v1.7.3 \n Built 11.21.21 \n \n Major code optimization, added console, added HomeFrame, major debugging, added loading system with whitelists, disabled whitelist for now, esp is almost finished, made boxes way thicker, added change log, removed bananna knife due to detection, working on aimbot. Currently very buggy!  Issues: Esp is very buggy (Mostly fixed now), do not change color/refresh esp/change opacity without enabling the feature you are changing first, if you have problems click refresh esp and go from there, chat spammer spams multiple times after reenabling, crosshair draws over menu when enabled for the first time. \n \n Credits: \n Jcat (Coder) \n irc7 (Teaching me how to make ESP) \n Anyone I pasted from (Skin changer and Mod weapon)"
 ChangeLog.TextScaled = true
 ChangeLog.TextColor3 = Red
 ChangeLog.Active = true
@@ -380,24 +569,6 @@ EspRefreshButton.MouseButton1Click:Connect(function()
 end)
 --<End>--
 
---<Rage Crash>--
-RageCrashButton.Name = "RageCrashButton"
-RageCrashButton.AnchorPoint = VectorCenter
-RageCrashButton.Position = UDim2.new(0.5, 0, 0.9, 0)
-RageCrashButton.Size = UDim2.new(0, 300, 0, 40)
-RageCrashButton.BorderSizePixel = 2
-RageCrashButton.BackgroundColor3 = lBlack
-RageCrashButton.BorderColor3 = CurrentColor
-RageCrashButton.TextScaled = true
-RageCrashButton.TextColor3 = White
-RageCrashButton.Font = Enum.Font.RobotoCondensed
-RageCrashButton.Text = "Crash local game"
-RageCrashButton.MouseButton1Click:Connect(function()
-    while true do
-    end
-end)
---<End>--
-
 function AddUICheckBox(Variable, vName, PosX, PosY, vText)
     Variable.Name = vName
     Variable.AnchorPoint = VectorCenter
@@ -420,8 +591,20 @@ AddUICheckBox(EspBoxesToggle, "EspBoxesToggle", Left, 0.4, "")
 AddUICheckBox(EspChamsToggle, "EspChamsToggle", Right, 0.4, "")
 AddUICheckBox(EspHealthBarToggle, "EspHealthBarToggle", Left, 0.6, "")
 AddUICheckBox(FovChangerToggle, "FovChangerToggle", Right, 0.6, "")
+AddUICheckBox(ConsoleToggle, "ConsoleToggle", Left, 0.8, "")
 
 --<Checkbox Functions>--
+
+ConsoleToggle.MouseButton1Click:Connect(function()
+    MainFrame.Visible = not MainFrame.Visible
+
+    if MainFrame.Visible then
+        ConsoleToggle.Text = "✓"
+    else
+        ConsoleToggle.Text = ""
+    end
+end)
+
 WatermarkToggle.MouseButton1Click:Connect(function()
     if WatermarkToggle.Text == "✓" then
         WatermarkToggle.Text = ""
@@ -889,6 +1072,7 @@ CreateLabel(EspHealthBarLabel, "EspHealthBarLabel", "Health Esp")
 CreateLabel(ChamsOpacityLabel, "ChamsOpacityLabel", "Opacity 1-5")
 CreateLabel(FovTextBoxLabel, "FovTextBoxLabel", "Fov 1-120")
 CreateLabel(FovChangerLabel, "FovChangerLabel", "Fov Changer")
+CreateLabel(ConsoleToggleLabel, "ConsoleToggleLabel", "Console")
 
 function AddUIButton(Variable, vName, PosX, PosY, vText)
     Variable.Name = vName
@@ -1253,6 +1437,7 @@ CreateTabButton(ColorsTabButton, "ColorsTabButton", 0.85, "Colors")
 --<End>--
 
 --<Tab Button Functions>--
+
 LegitTabButton.MouseButton1Click:Connect(function()
     if CurrentMode == lBlack then
         LegitTabButton.TextColor3 = White
@@ -1467,10 +1652,11 @@ function ColorUpdate2()
     ChamsOrange.BorderColor3 = CurrentColor
     ChamsWhite.BorderColor3 = CurrentColor
     ChamsBlack.BorderColor3 = CurrentColor
-    RageCrashButton.BorderColor3 = CurrentColor
     FovChangerToggle.BorderColor3 = CurrentColor
     FovChangerTextBox.BorderColor3 = CurrentColor
     FovChangerToggle.TextColor3 = CurrentColor
+    ConsoleToggle.BorderColor3 = CurrentColor
+    ConsoleToggle.TextColor3 = CurrentColor
 end
 
 function LightModeUpdate()
@@ -1551,9 +1737,84 @@ function LightModeUpdate2()
     ChamsOrange.BackgroundColor3 = CurrentMode
     ChamsWhite.BackgroundColor3 = CurrentMode
     ChamsBlack.BackgroundColor3 = CurrentMode
-    RageCrashButton.BackgroundColor3 = CurrentMode
     FovChangerToggle.BackgroundColor3 = CurrentMode
     FovChangerTextBox.BackgroundColor3 = CurrentMode
+    ConsoleToggle.BackgroundColor3 = CurrentMode
+end
+
+function TextColorUpdate()
+    HomeHeader.TextColor3 = CurrentText
+    WelcomeLabel.TextColor3 = CurrentText
+    WatermarkBackground.TextColor3 = CurrentText
+    ChangeLogButton.TextColor3 = CurrentText
+    WatermarkLabel.TextColor3 = CurrentText
+    ChatSpamLabel.TextColor3 = CurrentText
+    DrawCrosshairLabel.TextColor3 = CurrentText
+    SkinChangerButton.TextColor3 = CurrentText
+    MenuColorDrop.TextColor3 = CurrentText
+    MenuRed.TextColor3 = CurrentText
+    MenuGreen.TextColor3 = CurrentText
+    MenuBlue.TextColor3 = CurrentText
+    MenuYellow.TextColor3 = CurrentText
+    MenuPink.TextColor3 = CurrentText
+    CrosshairColorDrop.TextColor3 = CurrentText
+    CrosshairRed.TextColor3 = CurrentText
+    CrosshairGreen.TextColor3 = CurrentText
+    CrosshairBlue.TextColor3 = CurrentText
+    CrosshairYellow.TextColor3 = CurrentText
+    CrosshairPink.TextColor3 = CurrentText
+    CrosshairWhite.TextColor3 = CurrentText
+    CrosshairBlack.TextColor3 = CurrentText
+    LightModeLabel.TextColor3 = CurrentText
+    LegitHeader.TextColor3 = CurrentText
+    RageHeader.TextColor3 = CurrentText
+    VisualsHeader.TextColor3 = CurrentText
+    MiscHeader.TextColor3 = CurrentText
+    ColorsHeader.TextColor3 = CurrentText
+    KillAllButton.TextColor3 = CurrentText
+    EspRefreshButton.TextColor3 = CurrentText
+    EspNamesLabel.TextColor3 = CurrentText
+    EspTeamLabel.TextColor3 = CurrentText
+    EspBoxesLabel.TextColor3 = CurrentText
+    EspChamsLabel.TextColor3 = CurrentText
+    EspHealthBarLabel.TextColor3 = CurrentText
+    NameEspColorDrop.TextColor3 = CurrentText
+    BoxEspColorDrop.TextColor3 = CurrentText
+    NameEspRed.TextColor3 = CurrentText
+    NameEspGreen.TextColor3 = CurrentText
+    NameEspBlue.TextColor3 = CurrentText
+    NameEspYellow.TextColor3 = CurrentText
+    NameEspPink.TextColor3 = CurrentText
+    NameEspWhite.TextColor3 = CurrentText
+    NameEspBlack.TextColor3 = CurrentText
+    BoxEspRed.TextColor3 = CurrentText
+    BoxEspGreen.TextColor3 = CurrentText
+    BoxEspBlue.TextColor3 = CurrentText
+    BoxEspYellow.TextColor3 = CurrentText
+    BoxEspPink.TextColor3 = CurrentText
+    BoxEspWhite.TextColor3 = CurrentText
+    BoxEspBlack.TextColor3 = CurrentText
+    TextColorUpdate2()
+end
+
+function TextColorUpdate2()
+    ChamsOpacityTextBox.TextColor3 = CurrentText
+    ChamsEspColorDrop.TextColor3 = CurrentText
+    ChamsRed.TextColor3 = CurrentText
+    ChamsGreen.TextColor3 = CurrentText
+    ChamsBlue.TextColor3 = CurrentText
+    ChamsCyan.TextColor3 = CurrentText
+    ChamsYellow.TextColor3 = CurrentText
+    ChamsPink.TextColor3 = CurrentText
+    ChamsPurple.TextColor3 = CurrentText
+    ChamsOrange.TextColor3 = CurrentText
+    ChamsWhite.TextColor3 = CurrentText
+    ChamsBlack.TextColor3 = CurrentText
+    ChamsOpacityLabel.TextColor3 = CurrentText
+    FovChangerLabel.TextColor3 = CurrentText
+    FovTextBoxLabel.TextColor3 = CurrentText
+    FovChangerTextBox.TextColor3 = CurrentText
+    ConsoleToggleLabel.TextColor3 = CurrentText
 end
 
 function CrosshairUpdate()
@@ -1694,81 +1955,6 @@ function UpdateFov()
    end)()
 end
 
-function TextColorUpdate()
-    HomeHeader.TextColor3 = CurrentText
-    WelcomeLabel.TextColor3 = CurrentText
-    WatermarkBackground.TextColor3 = CurrentText
-    ChangeLogButton.TextColor3 = CurrentText
-    WatermarkLabel.TextColor3 = CurrentText
-    ChatSpamLabel.TextColor3 = CurrentText
-    DrawCrosshairLabel.TextColor3 = CurrentText
-    SkinChangerButton.TextColor3 = CurrentText
-    MenuColorDrop.TextColor3 = CurrentText
-    MenuRed.TextColor3 = CurrentText
-    MenuGreen.TextColor3 = CurrentText
-    MenuBlue.TextColor3 = CurrentText
-    MenuYellow.TextColor3 = CurrentText
-    MenuPink.TextColor3 = CurrentText
-    CrosshairColorDrop.TextColor3 = CurrentText
-    CrosshairRed.TextColor3 = CurrentText
-    CrosshairGreen.TextColor3 = CurrentText
-    CrosshairBlue.TextColor3 = CurrentText
-    CrosshairYellow.TextColor3 = CurrentText
-    CrosshairPink.TextColor3 = CurrentText
-    CrosshairWhite.TextColor3 = CurrentText
-    CrosshairBlack.TextColor3 = CurrentText
-    LightModeLabel.TextColor3 = CurrentText
-    LegitHeader.TextColor3 = CurrentText
-    RageHeader.TextColor3 = CurrentText
-    VisualsHeader.TextColor3 = CurrentText
-    MiscHeader.TextColor3 = CurrentText
-    ColorsHeader.TextColor3 = CurrentText
-    KillAllButton.TextColor3 = CurrentText
-    EspRefreshButton.TextColor3 = CurrentText
-    EspNamesLabel.TextColor3 = CurrentText
-    EspTeamLabel.TextColor3 = CurrentText
-    EspBoxesLabel.TextColor3 = CurrentText
-    EspChamsLabel.TextColor3 = CurrentText
-    EspHealthBarLabel.TextColor3 = CurrentText
-    NameEspColorDrop.TextColor3 = CurrentText
-    BoxEspColorDrop.TextColor3 = CurrentText
-    NameEspRed.TextColor3 = CurrentText
-    NameEspGreen.TextColor3 = CurrentText
-    NameEspBlue.TextColor3 = CurrentText
-    NameEspYellow.TextColor3 = CurrentText
-    NameEspPink.TextColor3 = CurrentText
-    NameEspWhite.TextColor3 = CurrentText
-    NameEspBlack.TextColor3 = CurrentText
-    BoxEspRed.TextColor3 = CurrentText
-    BoxEspGreen.TextColor3 = CurrentText
-    BoxEspBlue.TextColor3 = CurrentText
-    BoxEspYellow.TextColor3 = CurrentText
-    BoxEspPink.TextColor3 = CurrentText
-    BoxEspWhite.TextColor3 = CurrentText
-    BoxEspBlack.TextColor3 = CurrentText
-    TextColorUpdate2()
-end
-
-function TextColorUpdate2()
-    ChamsOpacityTextBox.TextColor3 = CurrentText
-    ChamsEspColorDrop.TextColor3 = CurrentText
-    ChamsRed.TextColor3 = CurrentText
-    ChamsGreen.TextColor3 = CurrentText
-    ChamsBlue.TextColor3 = CurrentText
-    ChamsCyan.TextColor3 = CurrentText
-    ChamsYellow.TextColor3 = CurrentText
-    ChamsPink.TextColor3 = CurrentText
-    ChamsPurple.TextColor3 = CurrentText
-    ChamsOrange.TextColor3 = CurrentText
-    ChamsWhite.TextColor3 = CurrentText
-    ChamsBlack.TextColor3 = CurrentText
-    ChamsOpacityLabel.TextColor3 = CurrentText
-    RageCrashButton.TextColor3 = CurrentText
-    FovChangerLabel.TextColor3 = CurrentText
-    FovTextBoxLabel.TextColor3 = CurrentText
-    FovChangerTextBox.TextColor3 = CurrentText
-end
-
 function UpdateTime()
     Seconds = Seconds + 1
 
@@ -1782,7 +1968,7 @@ function UpdateTime()
         Minutes = 0
     end
 
-    WatermarkBackground.Text = "Ninelives v1.7.1 | "..Plr.Name.." | "..Hours..":"..Minutes..":"..Seconds..""
+    WatermarkBackground.Text = "Ninelives v1.7.3 | "..Plr.Name.." | "..Hours..":"..Minutes..":"..Seconds..""
 end
 
 coroutine.wrap(function()
