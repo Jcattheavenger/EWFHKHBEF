@@ -9,7 +9,7 @@
 
 function CreateNotification(vText, vDuration, vButton)
     game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "Ninelives v1.7.3",
+        Title = "Ninelives v1.7.8",
         Text = vText,
         Duration = vDuration,
         Button1 = vButton
@@ -276,7 +276,7 @@ WatermarkBackground.BorderColor3 = CurrentColor
 WatermarkBackground.TextScaled = true
 WatermarkBackground.TextColor3 = White
 WatermarkBackground.Font = Enum.Font.RobotoCondensed
-WatermarkBackground.Text = "Ninelives v1.7.3 | "..Plr.Name..""
+WatermarkBackground.Text = "Ninelives v1.7.8 | "..Plr.Name..""
 DrawnCrosshair.Name = "DrawnCrosshair"
 DrawnCrosshair.AnchorPoint = VectorCenter
 DrawnCrosshair.Position = UDimCenter
@@ -311,7 +311,7 @@ function CreateHeader(Variable, vName, vText, PosY, SizeY)
     Variable.Text = vText
 end
 
-CreateHeader(HomeHeader, "HomeHeader", "Ninelives v1.7.3", 0.1, 75)
+CreateHeader(HomeHeader, "HomeHeader", "Ninelives v1.7.8", 0.1, 75)
 
 function CreateDrawLine(Variable, vName)
     Variable.Name = vName
@@ -518,7 +518,7 @@ ChangeLog.Size = UDim2.new(0, 350, 0, 500)
 ChangeLog.BorderSizePixel = 2
 ChangeLog.BackgroundColor3 = White
 ChangeLog.BorderColor3 = Black
-ChangeLog.Text = "Ninelives v1.7.3 \n Built 11.21.21 \n \n Major code optimization, added console, added HomeFrame, major debugging, added loading system with whitelists, disabled whitelist for now, esp is almost finished, made boxes way thicker, added change log, removed bananna knife due to detection, working on aimbot. Currently very buggy!  Issues: Esp is very buggy (Mostly fixed now), do not change color/refresh esp/change opacity without enabling the feature you are changing first, if you have problems click refresh esp and go from there, chat spammer spams multiple times after reenabling, crosshair draws over menu when enabled for the first time. \n \n Credits: \n Jcat (Coder) \n irc7 (Teaching me how to make ESP) \n Anyone I pasted from (Skin changer and Mod weapon)"
+ChangeLog.Text = "Ninelives v1.7.8 \n Built 11.21.21 \n \n Major code optimization, added console, added HomeFrame, major debugging, added loading system with whitelists, disabled whitelist for now, esp is almost finished, made boxes way thicker, added change log, removed bananna knife due to detection, working on aimbot. Currently very buggy!  Issues: Esp is very buggy (Mostly fixed now), do not change color/refresh esp/change opacity without enabling the feature you are changing first, if you have problems click refresh esp and go from there, chat spammer spams multiple times after reenabling, crosshair draws over menu when enabled for the first time. \n \n Credits: \n Jcat (Coder) \n All tetesters and mods! \n Anyone I pasted from (Skin changer and Mod weapon)"
 ChangeLog.TextScaled = true
 ChangeLog.TextColor3 = Red
 ChangeLog.Active = true
@@ -917,7 +917,7 @@ function Update()
         if HealthEspEnabled == true then
             if TeamCheck == true then
                 for _,v in pairs(game:GetService("Players"):GetChildren()) do
-                    if v ~= game.Players.LocalPlayer and v.TeamColor ~= game:GetService("Players").LocalPlayer.TeamColor then
+                    if v ~= game.Players.LocalPlayer and v.Character ~= nil and v.TeamColor ~= game:GetService("Players").LocalPlayer.TeamColor then
                         if v.Character:FindFirstChild("Head") ~= nil then
                             if v.Character.Head:FindFirstChild("HealthGui") == nil then
                                 HealthGui.Adornee = v.Character.Head
@@ -1968,7 +1968,7 @@ function UpdateTime()
         Minutes = 0
     end
 
-    WatermarkBackground.Text = "Ninelives v1.7.3 | "..Plr.Name.." | "..Hours..":"..Minutes..":"..Seconds..""
+    WatermarkBackground.Text = "Ninelives v1.7.8 | "..Plr.Name.." | "..Hours..":"..Minutes..":"..Seconds..""
 end
 
 coroutine.wrap(function()
