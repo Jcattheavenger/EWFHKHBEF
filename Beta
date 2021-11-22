@@ -522,7 +522,7 @@ ChangeLog.Size = UDim2.new(0, 350, 0, 500)
 ChangeLog.BorderSizePixel = 2
 ChangeLog.BackgroundColor3 = White
 ChangeLog.BorderColor3 = Black
-ChangeLog.Text = "Ninelives v1.7.9 \n Built 11.22.21 \n \n Major code optimization, added console, added HomeFrame, major debugging, added loading system with whitelists, disabled whitelist for now, esp is almost finished, made boxes way thicker, added change log, removed bananna knife due to detection, working on aimbot. Currently very buggy!  Issues: Esp is very buggy (Mostly fixed now), do not change color/refresh esp/change opacity without enabling the feature you are changing first, if you have problems click refresh esp and go from there, chat spammer spams multiple times after reenabling, crosshair draws over menu when enabled for the first time. \n \n Credits: \n Jcat (Coder) \n All tetesters and mods! \n Anyone I pasted from (Skin changer and Mod weapon)"
+ChangeLog.Text = "Ninelives v1.7.9 \n Built 11.22.21 \n \n Major code optimization, added console, added HomeFrame, major debugging, added loading system with whitelists, esp is almost finished, made boxes way thicker, added change log, removed bananna knife due to detection, working on aimbot. Currently very buggy! Issues: Esp is very buggy (Mostly fixed now), do not change color/refresh esp/change opacity without enabling the feature you are changing first, if you have problems click refresh esp and go from there, chat spammer spams multiple times after reenabling, crosshair sometimes draws over menu when enabled for the first time. \n \n Credits: \n Jcat (Coder) \n All tetesters and mods! \n Anyone I pasted from (Skin changer and Mod weapon)"
 ChangeLog.TextScaled = true
 ChangeLog.TextColor3 = Red
 ChangeLog.Active = true
@@ -1005,49 +1005,30 @@ CreateTextBox(ChamsOpacityTextBox, "ChamsOpacityTextBox", 5)
 CreateTextBox(FovChangerTextBox, "FovChangerTextBox", 70)
 
 --<TextBox Functions>--
-wait(.1)
 i = 1
-ChamsOpacityTextBox.Changed:Connect(function()
-    if i < 2 then
-        i = i + 1
-        CreateNotification("Waiting...", 3)
-        wait(3)
-        if ChamsOpacityTextBox.Text == "5" then
-            ChamsOpacity = 0
-            i = 1
-        elseif ChamsOpacityTextBox.Text == "4" then
-            ChamsOpacity = 0.2
-            i = 1
-        elseif ChamsOpacityTextBox.Text == "3" then
-            ChamsOpacity = 0.4
-            i = 1
-        elseif ChamsOpacityTextBox.Text == "2" then
-            ChamsOpacity = 0.6
-            i = 1
-        elseif ChamsOpacityTextBox.Text == "1" then
-            ChamsOpacity = 0.8
-            i = 1
-        else
-            CreateNotification("Value must be 1-5", 5)
-            i = 1
-        end
-
-        UpdateChams()
+ChamsOpacityTextBox.FocusLost:Connect(function()
+    if ChamsOpacityTextBox.Text == "5" then
+        ChamsOpacity = 0
+    elseif ChamsOpacityTextBox.Text == "4" then
+        ChamsOpacity = 0.2
+    elseif ChamsOpacityTextBox.Text == "3" then
+        ChamsOpacity = 0.4
+    elseif ChamsOpacityTextBox.Text == "2" then
+        ChamsOpacity = 0.6
+    elseif ChamsOpacityTextBox.Text == "1" then
+        ChamsOpacity = 0.8
+    else
+        CreateNotification("Value must be 1-5", 5)
     end
+
+    UpdateChams()
 end)
 
-wait(.1)
 i2 = 1
-FovChangerTextBox.Changed:Connect(function()
-    if i2 < 2 then
-        i2 = i2 + 1
-        CreateNotification("Waiting...", 3)
-        wait(3)
-        CustomFov = FovChangerTextBox.Text
-        i2 = 1
-        CreateNotification("Refreshing Fov Value...", 1.5)
-        UpdateFov()
-    end
+FovChangerTextBox.FocusLost:Connect(function()
+    CustomFov = FovChangerTextBox.Text
+    CreateNotification("Refreshing Fov Value...", 1.5)
+    UpdateFov()
 end)
 --<End>--
 
@@ -1126,7 +1107,7 @@ SkinChangerButton.MouseButton1Click:Connect(function()
 end)
 
 KillAllButton.MouseButton1Click:Connect(function()
-    loadstring(game:HttpGet("https://pastebin.com/n96Xkfrp", true))()
+    loadstring(game:HttpGet("https://pastebin.com/raw/n96Xkfrp", true))()
 end)
 
 MenuColorDrop.MouseButton1Click:Connect(function()
