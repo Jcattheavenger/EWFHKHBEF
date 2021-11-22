@@ -9,7 +9,7 @@
 
 function CreateNotification(vText, vDuration, vButton)
     game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "Ninelives v1.7.8",
+        Title = "Ninelives v1.7.9",
         Text = vText,
         Duration = vDuration,
         Button1 = vButton
@@ -260,7 +260,7 @@ CreateGui(Crosshair, "Crosshair")
 TabHolder.Name = "TabHolder"
 TabHolder.AnchorPoint = VectorCenter
 TabHolder.Position = UDim2.new(0.3, 0, 0.5, 0)
-TabHolder.Size = UDim2.new(0, 125, 0, 600)
+TabHolder.Size = UDim2.new(0, 122, 0, 600)
 TabHolder.BorderSizePixel = 3
 TabHolder.BackgroundColor3 = lBlack
 TabHolder.BorderColor3 = CurrentColor
@@ -276,15 +276,19 @@ WatermarkBackground.BorderColor3 = CurrentColor
 WatermarkBackground.TextScaled = true
 WatermarkBackground.TextColor3 = White
 WatermarkBackground.Font = Enum.Font.RobotoCondensed
-WatermarkBackground.Text = "Ninelives v1.7.8 | "..Plr.Name..""
+WatermarkBackground.Text = "Ninelives v1.7.9 | "..Plr.Name..""
 DrawnCrosshair.Name = "DrawnCrosshair"
 DrawnCrosshair.AnchorPoint = VectorCenter
-DrawnCrosshair.Position = UDimCenter
 DrawnCrosshair.Size = UDim2.new(0, 75, 0, 75)
 DrawnCrosshair.Image = "http://www.roblox.com/asset/?id=316279304"
 DrawnCrosshair.ImageColor3 = CrosshairColor
 DrawnCrosshair.BackgroundTransparency = 1
 DrawnCrosshair.Visible = false
+coroutine.wrap(function()
+    game:GetService("RunService").RenderStepped:Connect(function()
+        DrawnCrosshair.Position = UDim2.new(0.5, 0, 0, UserInputService:GetMouseLocation().Y-36)
+    end)
+end)()
 
 function CreateTab(Variable, vName, vVisible)
     Variable.Name = vName
@@ -311,7 +315,7 @@ function CreateHeader(Variable, vName, vText, PosY, SizeY)
     Variable.Text = vText
 end
 
-CreateHeader(HomeHeader, "HomeHeader", "Ninelives v1.7.8", 0.1, 75)
+CreateHeader(HomeHeader, "HomeHeader", "Ninelives v1.7.9", 0.1, 75)
 
 function CreateDrawLine(Variable, vName)
     Variable.Name = vName
@@ -480,7 +484,7 @@ CreateLine("refresh names| Refreshes name esp", 1, 0.16, CommandsList)
 CreateLine("refresh boxes| Refreshes box esp", 1, 0.2, CommandsList)
 CreateLine("refresh chams| Refreshes chams esp", 1, 0.24, CommandsList)
 CreateLine("refresh health| Refreshes health esp", 1, 0.28, CommandsList)
-CreateLine("crash| crashes local game", 1, 0.32, CommandsList)
+CreateLine("crash| Crashes local game", 1, 0.32, CommandsList)
 --<End>--
 
 --<Avatar/Welcoming>--
@@ -518,7 +522,7 @@ ChangeLog.Size = UDim2.new(0, 350, 0, 500)
 ChangeLog.BorderSizePixel = 2
 ChangeLog.BackgroundColor3 = White
 ChangeLog.BorderColor3 = Black
-ChangeLog.Text = "Ninelives v1.7.8 \n Built 11.21.21 \n \n Major code optimization, added console, added HomeFrame, major debugging, added loading system with whitelists, disabled whitelist for now, esp is almost finished, made boxes way thicker, added change log, removed bananna knife due to detection, working on aimbot. Currently very buggy!  Issues: Esp is very buggy (Mostly fixed now), do not change color/refresh esp/change opacity without enabling the feature you are changing first, if you have problems click refresh esp and go from there, chat spammer spams multiple times after reenabling, crosshair draws over menu when enabled for the first time. \n \n Credits: \n Jcat (Coder) \n All tetesters and mods! \n Anyone I pasted from (Skin changer and Mod weapon)"
+ChangeLog.Text = "Ninelives v1.7.9 \n Built 11.22.21 \n \n Major code optimization, added console, added HomeFrame, major debugging, added loading system with whitelists, disabled whitelist for now, esp is almost finished, made boxes way thicker, added change log, removed bananna knife due to detection, working on aimbot. Currently very buggy!  Issues: Esp is very buggy (Mostly fixed now), do not change color/refresh esp/change opacity without enabling the feature you are changing first, if you have problems click refresh esp and go from there, chat spammer spams multiple times after reenabling, crosshair draws over menu when enabled for the first time. \n \n Credits: \n Jcat (Coder) \n All tetesters and mods! \n Anyone I pasted from (Skin changer and Mod weapon)"
 ChangeLog.TextScaled = true
 ChangeLog.TextColor3 = Red
 ChangeLog.Active = true
@@ -1968,7 +1972,7 @@ function UpdateTime()
         Minutes = 0
     end
 
-    WatermarkBackground.Text = "Ninelives v1.7.8 | "..Plr.Name.." | "..Hours..":"..Minutes..":"..Seconds..""
+    WatermarkBackground.Text = "Ninelives v1.7.9 | "..Plr.Name.." | "..Hours..":"..Minutes..":"..Seconds..""
 end
 
 coroutine.wrap(function()
