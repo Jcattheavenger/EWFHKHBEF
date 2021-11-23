@@ -75,6 +75,8 @@ local VisualsTabButton = Instance.new("TextButton",TabHolder)
 local MiscTabButton = Instance.new("TextButton",TabHolder)
 local ColorsTabButton = Instance.new("TextButton",TabHolder)
 
+local TempButton = Instance.new("TextButton",RageTab)
+
 local ChangeLog = Instance.new("TextLabel",Menu)
 local ChangeLogButton = Instance.new("TextButton",HomeFrame)
 
@@ -1081,6 +1083,7 @@ AddUIButton(CrosshairColorDrop, "CrosshairColorDrop", 0.8, 0.2, "Crosshair")
 AddUIButton(NameEspColorDrop, "NameEspColorDrop", 0.8, 0.4, "Names")
 AddUIButton(BoxEspColorDrop, "BoxEspColorDrop", 0.2, 0.6, "Boxes")
 AddUIButton(ChamsEspColorDrop, "ChamsEspColorDrop", 0.8, 0.6, "Chams")
+AddUIButton(TempButton, "TempButton", 0.2, 0.2, "Fps Gui")
 
 function CreateScroll(Variable, vName, vSize)
     Variable.Name = vName
@@ -1102,6 +1105,11 @@ CreateScroll(BoxEspScroll, "BoxEspScroll", 7)
 CreateScroll(ChamsEspScroll, "ChamsEspScroll", 10)
 
 --<Button Functions>--
+
+TempButton.MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/cHKVsTg8", true))()
+end)
+
 SkinChangerButton.MouseButton1Click:Connect(function()
     loadstring(game:HttpGet("https://pastebin.com/raw/yiXhJ1VE", true))()
 end)
