@@ -6,7 +6,7 @@ Sound.PlayOnRemove = true
 Sound:Destroy()
 ---<End>---
 
-local Version = "v1.8.2"
+local Version = "v1.8.4"
 
 function CreateNotification(vText, vDuration, vButton)
     game:GetService("StarterGui"):SetCore("SendNotification", {
@@ -445,6 +445,13 @@ CmdTextBox.FocusLost:Connect(function()
         while true do
         end
 
+    elseif NewLine.Text == "- unload" then
+        Folder:Destroy()
+        CustomFovEnabled = false
+        BoxEspEnabled = false
+        HealthEspEnabled = false
+        EspEnabled = false
+        ChamsEnabled = false
     end
 end)
 
