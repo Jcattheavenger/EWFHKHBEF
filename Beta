@@ -447,7 +447,8 @@ CmdTextBox.FocusLost:Connect(function()
 
     elseif NewLine.Text == "- unload" then
         Folder:Destroy()
-        CustomFovEnabled = false
+        game.Workspace.CurrentCamera.FieldOfView = 70
+        ChatSpam = false
         BoxEspEnabled = false
         HealthEspEnabled = false
         EspEnabled = false
@@ -483,12 +484,13 @@ end)
 
 CreateLine("cmds| Shows commands list", 1, 0.04, CommandsList)
 CreateLine("clear| Clears console space", 1, 0.08, CommandsList)
+CreateLine("crash| Crashes local game", 1, 0.32, CommandsList)
+CreateLine("unload| Unloads cheat", 1, 0.36, CommandsList)
 CreateLine("shadow| Changes menu color to secret color", 1, 0.12, CommandsList)
 CreateLine("refresh names| Refreshes name esp", 1, 0.16, CommandsList)
 CreateLine("refresh boxes| Refreshes box esp", 1, 0.2, CommandsList)
 CreateLine("refresh chams| Refreshes chams esp", 1, 0.24, CommandsList)
 CreateLine("refresh health| Refreshes health esp", 1, 0.28, CommandsList)
-CreateLine("crash| Crashes local game", 1, 0.32, CommandsList)
 --<End>--
 
 --<Avatar/Welcoming>--
@@ -987,7 +989,6 @@ FovChangerToggle.MouseButton1Click:Connect(function()
         UpdateFov()
     else
         FovChangerToggle.Text = ""
-        wait(0.3)
         game.Workspace.CurrentCamera.FieldOfView = 70
     end
 end)
