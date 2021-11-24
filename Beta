@@ -696,7 +696,7 @@ NameEspGui.Name = "NameEsp"
 NameEspGui.ResetOnSpawn = false
 NameEspGui.AlwaysOnTop = true
 NameEspGui.Size = UDim2.new(1, 0, 1, 0)
-NameEspGui.ExtentsOffset = Vector3.new(0, 2, 0)
+NameEspGui.ExtentsOffset = Vector3.new(0, 2.5, 0)
 
 NameEsp.BackgroundTransparency = 1
 NameEsp.Text = ""
@@ -712,23 +712,23 @@ game:GetService("RunService").RenderStepped:Connect(function()
     for i,v in pairs (game:GetService("Players"):GetPlayers()) do
         if TeamCheck == true then
             if v ~= game:GetService("Players").LocalPlayer and v.Character ~= nil and EspEnabled == true and v.TeamColor ~= game:GetService("Players").LocalPlayer.TeamColor then
-                if v.Character:FindFirstChild("Head") ~= nil then
-                    if v.Character.Head:FindFirstChild("NameEsp") == nil then
+                if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                    if v.Character.HumanoidRootPart:FindFirstChild("NameEsp") == nil then
                         NameEsp.Text = ""..v.Name..""
                         NameEsp.TextColor3 = NameEspColor
-                        NameEspGui.Adornee = v.Character.Head
-                        NameEspGui:Clone().Parent = v.Character.Head
+                        NameEspGui.Adornee = v.Character.HumanoidRootPart
+                        NameEspGui:Clone().Parent = v.Character.HumanoidRootPart
                     end
                 end
             end
         else
             if v ~= game:GetService("Players").LocalPlayer and v.Character ~= nil and EspEnabled == true then
-                if v.Character:FindFirstChild("Head") ~= nil then
-                    if v.Character.Head:FindFirstChild("NameEsp") == nil then
+                if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                    if v.Character.HumanoidRootPart:FindFirstChild("NameEsp") == nil then
                         NameEsp.Text = ""..v.Name..""
                         NameEsp.TextColor3 = NameEspColor
-                        NameEspGui.Adornee = v.Character.Head
-                        NameEspGui:Clone().Parent = v.Character.Head
+                        NameEspGui.Adornee = v.Character.HumanoidRootPart
+                        NameEspGui:Clone().Parent = v.Character.HumanoidRootPart
                     end
                 end
             end
@@ -775,7 +775,7 @@ BoxEspGui.AlwaysOnTop = true
 BoxEspGui.Size = UDim2.new(4, 0, 6, 0)
 
 BoxEsp.BackgroundTransparency = 1
-BoxEsp.Image = "http://www.roblox.com/asset/?id=8046960818"
+BoxEsp.Image = "http://www.roblox.com/asset/?id=8083895219"
 BoxEsp.AnchorPoint = Vector2.new(0.5, 0.5)
 BoxEsp.Size = UDim2.new(1, 0, 1, 0)
 BoxEsp.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -919,18 +919,18 @@ function Update()
             if TeamCheck == true then
                 for _,v in pairs(game:GetService("Players"):GetChildren()) do
                     if v ~= game.Players.LocalPlayer and v.Character ~= nil and v.TeamColor ~= game:GetService("Players").LocalPlayer.TeamColor then
-                        if v.Character:FindFirstChild("Head") ~= nil then
-                            if v.Character.Head:FindFirstChild("HealthGui") == nil then
-                                HealthGui.Adornee = v.Character.Head
-                                HealthGui:Clone().Parent = v.Character.Head
+                        if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                            if v.Character.HumanoidRootPart:FindFirstChild("HealthGui") == nil then
+                                HealthGui.Adornee = v.Character.HumanoidRootPart
+                                HealthGui:Clone().Parent = v.Character.HumanoidRootPart
                             end
                         end
                     end
                     if v ~= game.Players.LocalPlayer and v.Character ~= nil and v.TeamColor ~= game:GetService("Players").LocalPlayer.TeamColor then
-                        if v.Character:FindFirstChild("Head") ~= nil then
-                            if v.Character.Head.HealthGui:FindFirstChild("Esp") then
+                        if v.Character:FindFirstChild("HumnanoidRootPart") ~= nil then
+                            if v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp") then
                                 if v.Character:FindFirstChild("Humanoid") then
-                                    v.Character.Head.HealthGui:FindFirstChild("Esp").Text = "%"..math.floor(v.Character.Humanoid.Health)..""
+                                    v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp").Text = "%"..math.floor(v.Character.Humanoid.Health)..""
                                 end
                             end
                         end
@@ -939,18 +939,18 @@ function Update()
             else
                 for _,v in pairs(game:GetService("Players"):GetChildren()) do
                     if v ~= game.Players.LocalPlayer and v.Character ~= nil then
-                        if v.Character:FindFirstChild("Head") ~= nil then
-                            if v.Character.Head:FindFirstChild("HealthGui") == nil then
-                                HealthGui.Adornee = v.Character.Head
-                                HealthGui:Clone().Parent = v.Character.Head
+                        if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                            if v.Character.HumanoidRootPart:FindFirstChild("HealthGui") == nil then
+                                HealthGui.Adornee = v.Character.HumanoidRootPart
+                                HealthGui:Clone().Parent = v.Character.HumanoidRootPart
                             end
                         end
                     end
                     if v ~= game.Players.LocalPlayer and v.Character ~= nil then
-                        if v.Character:FindFirstChild("Head") ~= nil then
-                            if v.Character.Head.HealthGui:FindFirstChild("Esp") then
+                        if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                            if v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp") then
                                 if v.Character:FindFirstChild("Humanoid") then
-                                    v.Character.Head.HealthGui:FindFirstChild("Esp").Text = "%"..math.floor(v.Character.Humanoid.Health)..""
+                                    v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp").Text = "%"..math.floor(v.Character.Humanoid.Health)..""
                                 end
                             end
                         end
@@ -961,9 +961,9 @@ function Update()
             wait(0.5)
             for _,v in pairs(game:GetService("Players"):GetChildren()) do
                 if v.Character ~= nil then
-                    if v.Character:FindFirstChild("Head") ~= nil then
-                        if v.Character.Head:FindFirstChild("HealthGui") ~= nil then
-                            v.Character.Head.HealthGui:Destroy()
+                    if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                        if v.Character.HumanoidRootPart:FindFirstChild("HealthGui") ~= nil then
+                            v.Character.HumanoidRootPart.HealthGui:Destroy()
                         end
                     end
                 end
