@@ -6,6 +6,8 @@ Sound.PlayOnRemove = true
 Sound:Destroy()
 ---<End>---
 
+local Version = "v1.8.2"
+
 function CreateNotification(vText, vDuration, vButton)
     game:GetService("StarterGui"):SetCore("SendNotification", {
         Title = "Ninelives "..Version.."",
@@ -242,8 +244,6 @@ local CustomFov = 70
 
 local NameIndex = 1
 local PosIndex = 0.02
-
-local Version = "v1.8.2"
 
 ---<Main Properties>---
 Folder.Name = ""..rTable[math.random(1,#rTable)]..rTable[math.random(1,#rTable)]..rTable[math.random(1,#rTable)]..rTable[math.random(1,#rTable)]..rTable[math.random(1,#rTable)]..""
