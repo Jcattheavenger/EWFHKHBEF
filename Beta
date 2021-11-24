@@ -1,10 +1,9 @@
 ---<Sound>---
---Sound = Instance.new("Sound",game.Workspace)
---Sound.SoundId = "rbxassetid://6887181639"
---Sound.Volume = 1
---Sound.Playing = true
---wait(3)
---Sound:Destroy()
+Sound = Instance.new("Sound",game.Workspace)
+Sound.SoundId = "rbxassetid://6887181639"
+Sound.Volume = 1
+Sound.PlayOnRemove = true
+Sound:Destroy()
 ---<End>---
 
 function CreateNotification(vText, vDuration, vButton)
@@ -520,7 +519,7 @@ ChangeLog.Size = UDim2.new(0, 350, 0, 500)
 ChangeLog.BorderSizePixel = 2
 ChangeLog.BackgroundColor3 = White
 ChangeLog.BorderColor3 = Black
-ChangeLog.Text = "Ninelives "..Version.." \n Built 11.22.21 \n \n Major code optimization, added console, added HomeFrame, major debugging, added loading system with whitelists, esp is almost finished, made boxes way thicker, added change log, removed bananna knife due to detection, working on aimbot. Currently very buggy! Issues: Esp is very buggy (Mostly fixed now), do not change color/refresh esp/change opacity without enabling the feature you are changing first, if you have problems click refresh esp and go from there, chat spammer spams multiple times after reenabling, crosshair sometimes draws over menu when enabled for the first time. \n \n Credits: \n Jcat (Coder) \n All tetesters and mods! \n Anyone I pasted from (Skin changer and Mod weapon)"
+ChangeLog.Text = "Ninelives "..Version.." \n Built 11.23.21 \n \n Major code optimization, added console, added HomeFrame, major debugging, added chat spammer fix for counter blox, added loading system with whitelists, esp is almost finished, made boxes way thicker, added change log, removed bananna knife due to detection, working on aimbot. Currently very buggy! Issues: Esp is very buggy (Mostly fixed now), do not change color/refresh esp/change opacity without enabling the feature you are changing first, if you have problems click refresh esp and go from there, chat spammer spams multiple times after reenabling, crosshair sometimes draws over menu when enabled for the first time. \n \n Credits: \n Jcat (Coder) \n All tetesters and mods! \n Anyone I pasted from (Skin changer and Mod weapon)"
 ChangeLog.TextScaled = true
 ChangeLog.TextColor3 = Red
 ChangeLog.Active = true
@@ -1314,6 +1313,662 @@ BoxEspBlue.MouseButton1Click:Connect(function()
     RefreshBoxEsp()
 end)
 BoxEspYellow.MouseButton1Click:Connect(function()
+    BoxEspColor = Yellow
+    wait(0.5)
+    RefreshBoxEsp()
+end)
+BoxEspPink.MouseButton1Click:Connect(function()
+    BoxEspColor = Pink
+    wait(0.5)
+    RefreshBoxEsp()
+end)
+BoxEspWhite.MouseButton1Click:Connect(function()
+    BoxEspColor = White
+    wait(0.5)
+    RefreshBoxEsp()
+end)
+BoxEspBlack.MouseButton1Click:Connect(function()
+    BoxEspColor = Black
+    wait(0.5)
+    RefreshBoxEsp()
+end)
+
+ChamsRed.MouseButton1Click:Connect(function()
+    ChamsColor = Red
+    wait(0.5)
+    UpdateChams()
+end)
+ChamsGreen.MouseButton1Click:Connect(function()
+    ChamsColor = Green
+    wait(0.5)
+    UpdateChams()
+end)
+ChamsBlue.MouseButton1Click:Connect(function()
+    ChamsColor = Blue
+    wait(0.5)
+    UpdateChams()
+end)
+ChamsCyan.MouseButton1Click:Connect(function()
+    ChamsColor = Cyan
+    wait(0.5)
+    UpdateChams()
+end)
+ChamsYellow.MouseButton1Click:Connect(function()
+    ChamsColor = Yellow
+    wait(0.5)
+    UpdateChams()
+end)
+ChamsPink.MouseButton1Click:Connect(function()
+    ChamsColor = Pink
+    wait(0.5)
+    UpdateChams()
+end)
+ChamsPurple.MouseButton1Click:Connect(function()
+    ChamsColor = Purple
+    wait(0.5)
+    UpdateChams()
+end)
+ChamsOrange.MouseButton1Click:Connect(function()
+    ChamsColor = Orange
+    wait(0.5)
+    UpdateChams()
+end)
+ChamsWhite.MouseButton1Click:Connect(function()
+    ChamsColor = White
+    wait(0.5)
+    UpdateChams()
+end)
+ChamsBlack.MouseButton1Click:Connect(function()
+    ChamsColor = Black
+    wait(0.5)
+    UpdateChams()
+end)
+--<End>--
+
+--<Headers>--
+CreateHeader(LegitHeader, "LegitHeader", "Legit", 0.05, 25)
+CreateHeader(RageHeader, "RageHeader", "Rage", 0.05, 25)
+CreateHeader(VisualsHeader, "VisualsHeader", "Visuals", 0.05, 25)
+CreateHeader(MiscHeader, "MiscHeader", "Misc", 0.05, 25)
+CreateHeader(ColorsHeader, "ColorsHeader", "Colors", 0.05, 25)
+--<End>--
+
+--<DrawLines>--
+CreateDrawLine(LegitDrawLine, "LegitDrawLine")
+CreateDrawLine(RageDrawLine, "RageDrawLine")
+CreateDrawLine(VisualsDrawLine, "VisualsDrawLine")
+CreateDrawLine(MiscDrawLine, "MiscDrawLine")
+CreateDrawLine(ColorsDrawLine, "ColorsDrawLine")
+--<End>--
+
+--<Buttons>--
+function CreateTabButton(Variable, vName, Index, vText)
+    Variable.Name = vName
+    Variable.AnchorPoint = VectorCenter
+    Variable.Position = UDim2.new(0.485, 0, Index, 0)
+    Variable.Size = UDim2.new(0, 122, 0, 60)
+    Variable.BorderSizePixel = 3
+    Variable.BackgroundColor3 = lBlack
+    Variable.BorderColor3 = CurrentColor
+    Variable.BorderSizePixel = 1
+    Variable.BorderMode = Enum.BorderMode.Inset
+    Variable.Text = vText
+    Variable.TextColor3 = lGrey
+    Variable.TextSize = 15
+end
+
+CreateTabButton(LegitTabButton, "LegitTabButton", 0.25, "Legit")
+CreateTabButton(RageTabButton, "RageTabButton", 0.4, "Rage")
+CreateTabButton(VisualsTabButton, "VisualsTabButton", 0.55, "Visuals")
+CreateTabButton(MiscTabButton, "MiscTabButton", 0.7, "Misc")
+CreateTabButton(ColorsTabButton, "ColorsTabButton", 0.85, "Colors")
+--<End>--
+
+--<Tab Button Functions>--
+
+LegitTabButton.MouseButton1Click:Connect(function()
+    if CurrentMode == lBlack then
+        LegitTabButton.TextColor3 = White
+    else
+        LegitTabButton.TextColor3 = Black
+    end
+    RageTabButton.TextColor3 = lGrey
+    VisualsTabButton.TextColor3 = lGrey
+    MiscTabButton.TextColor3 = lGrey
+    ColorsTabButton.TextColor3 = lGrey
+
+    HomeFrame.Visible = false
+    LegitTab.Visible = true
+    RageTab.Visible = false
+    VisualsTab.Visible = false
+    MiscTab.Visible = false
+    ColorsTab.Visible = false
+end)
+
+RageTabButton.MouseButton1Click:Connect(function()
+    LegitTabButton.TextColor3 = lGrey
+    if CurrentMode == lBlack then
+        RageTabButton.TextColor3 = White
+    else
+        RageTabButton.TextColor3 = Black
+    end
+    VisualsTabButton.TextColor3 = lGrey
+    MiscTabButton.TextColor3 = lGrey
+    ColorsTabButton.TextColor3 = lGrey
+
+    HomeFrame.Visible = false
+    LegitTab.Visible = false
+    RageTab.Visible = true
+    VisualsTab.Visible = false
+    MiscTab.Visible = false
+    ColorsTab.Visible = false
+end)
+
+VisualsTabButton.MouseButton1Click:Connect(function()
+    LegitTabButton.TextColor3 = lGrey
+    RageTabButton.TextColor3 = lGrey
+    if CurrentMode == lBlack then
+        VisualsTabButton.TextColor3 = White
+    else
+        VisualsTabButton.TextColor3 = Black
+    end
+    MiscTabButton.TextColor3 = lGrey
+    ColorsTabButton.TextColor3 = lGrey
+
+    HomeFrame.Visible = false
+    LegitTab.Visible = false
+    RageTab.Visible = false
+    VisualsTab.Visible = true
+    MiscTab.Visible = false
+    ColorsTab.Visible = false
+end)
+
+MiscTabButton.MouseButton1Click:Connect(function()
+    LegitTabButton.TextColor3 = lGrey
+    RageTabButton.TextColor3 = lGrey
+    VisualsTabButton.TextColor3 = lGrey
+    if CurrentMode == lBlack then
+        MiscTabButton.TextColor3 = White
+    else
+        MiscTabButton.TextColor3 = Black
+    end
+    ColorsTabButton.TextColor3 = lGrey
+
+    HomeFrame.Visible = false
+    LegitTab.Visible = false
+    RageTab.Visible = false
+    VisualsTab.Visible = false
+    MiscTab.Visible = true
+    ColorsTab.Visible = false
+end)
+
+ColorsTabButton.MouseButton1Click:Connect(function()
+    LegitTabButton.TextColor3 = lGrey
+    RageTabButton.TextColor3 = lGrey
+    VisualsTabButton.TextColor3 = lGrey
+    MiscTabButton.TextColor3 = lGrey
+    if CurrentMode == lBlack then
+        ColorsTabButton.TextColor3 = White
+    else
+        ColorsTabButton.TextColor3 = Black
+    end
+
+    HomeFrame.Visible = false
+    LegitTab.Visible = false
+    RageTab.Visible = false
+    VisualsTab.Visible = false
+    MiscTab.Visible = false
+    ColorsTab.Visible = true
+end)
+--<End>--
+
+Logo.Name = "Logo"
+Logo.AnchorPoint = VectorCenter
+Logo.Position = UDim2.new(0.485, 0, 0.1, 0)
+Logo.BackgroundTransparency = 1
+Logo.Size = UDim2.new(0, 122, 0, 122)
+Logo.Image = "http://www.roblox.com/asset/?id=7970152054"
+Logo.ImageColor3 = CurrentColor
+Logo.MouseButton1Click:Connect(function()
+    LegitTabButton.TextColor3 = lGrey
+    RageTabButton.TextColor3 = lGrey
+    VisualsTabButton.TextColor3 = lGrey
+    MiscTabButton.TextColor3 = lGrey
+    ColorsTabButton.TextColor3 = lGrey
+
+    HomeFrame.Visible = true
+    LegitTab.Visible = false
+    RageTab.Visible = false
+    VisualsTab.Visible = false
+    MiscTab.Visible = false
+    ColorsTab.Visible = false
+end)
+
+---<Main Functions>---
+--<Colors>--
+function ColorUpdate()
+    TabHolder.BorderColor3 = CurrentColor
+    HomeFrame.BorderColor3 = CurrentColor
+    HomeDrawLine.BackgroundColor3 = CurrentColor
+    WatermarkBackground.BorderColor3 = CurrentColor
+    LegitTab.BorderColor3 = CurrentColor
+    MenuRed.BorderColor3 = CurrentColor
+    ChangeLogButton.BorderColor3 = CurrentColor
+    RageTab.BorderColor3 = CurrentColor
+    VisualsTab.BorderColor3 = CurrentColor
+    MiscTab.BorderColor3 = CurrentColor
+    ColorsTab.BorderColor3 = CurrentColor
+    RageTabButton.BorderColor3 = CurrentColor
+    LegitTabButton.BorderColor3 = CurrentColor
+    MiscTabButton.BorderColor3 = CurrentColor
+    ColorsTabButton.BorderColor3 = CurrentColor
+    VisualsTabButton.BorderColor3 = CurrentColor
+    VisualsDrawLine.BackgroundColor3 = CurrentColor
+    LegitDrawLine.BackgroundColor3 = CurrentColor
+    RageDrawLine.BackgroundColor3 = CurrentColor
+    MiscDrawLine.BackgroundColor3 = CurrentColor
+    ColorsDrawLine.BackgroundColor3 = CurrentColor
+    MenuPink.BorderColor3 = CurrentColor
+    MenuYellow.BorderColor3 = CurrentColor
+    MenuGreen.BorderColor3 = CurrentColor
+    MenuColorDrop.BorderColor3 = CurrentColor
+    MenuBlue.BorderColor3 = CurrentColor
+    WatermarkToggle.TextColor3 = CurrentColor
+    WatermarkToggle.BorderColor3 = CurrentColor
+    DrawCrosshair.BorderColor3 = CurrentColor
+    DrawCrosshair.TextColor3 = CurrentColor
+    ChatSpamToggle.BorderColor3 = CurrentColor
+    ChatSpamToggle.TextColor3 = CurrentColor
+    CrosshairColorDrop.BorderColor3 = CurrentColor
+    CrosshairRed.BorderColor3 = CurrentColor
+    CrosshairGreen.BorderColor3 = CurrentColor
+    CrosshairBlue.BorderColor3 = CurrentColor
+    CrosshairWhite.BorderColor3 = CurrentColor
+    CrosshairPink.BorderColor3 = CurrentColor
+    CrosshairYellow.BorderColor3 = CurrentColor
+    CrosshairBlack.BorderColor3 = CurrentColor
+    SkinChangerButton.BorderColor3 = CurrentColor
+    LightModeToggle.BorderColor3 = CurrentColor
+    LightModeToggle.TextColor3 = CurrentColor
+    KillAllButton.BorderColor3 = CurrentColor
+    EspRefreshButton.BorderColor3 = CurrentColor
+    EspNamesToggle.BorderColor3 = CurrentColor
+    EspNamesToggle.TextColor3 = CurrentColor
+    EspTeamToggle.BorderColor3 = CurrentColor
+    EspTeamToggle.TextColor3 = CurrentColor
+    EspBoxesToggle.BorderColor3 = CurrentColor
+    EspBoxesToggle.TextColor3 = CurrentColor
+    EspChamsToggle.BorderColor3 = CurrentColor
+    EspChamsToggle.TextColor3 = CurrentColor
+    EspHealthBarToggle.BorderColor3 = CurrentColor
+    EspHealthBarToggle.TextColor3 = CurrentColor
+    NameEspColorDrop.BorderColor3 = CurrentColor
+    BoxEspColorDrop.BorderColor3 = CurrentColor
+    NameEspRed.BorderColor3 = CurrentColor
+    NameEspGreen.BorderColor3 = CurrentColor
+    NameEspBlue.BorderColor3 = CurrentColor
+    NameEspYellow.BorderColor3 = CurrentColor
+    NameEspPink.BorderColor3 = CurrentColor
+    NameEspWhite.BorderColor3 = CurrentColor
+    NameEspBlack.BorderColor3 = CurrentColor
+    BoxEspRed.BorderColor3 = CurrentColor
+    BoxEspGreen.BorderColor3 = CurrentColor
+    BoxEspBlue.BorderColor3 = CurrentColor
+    Logo.ImageColor3 = CurrentColor
+    ColorUpdate2()
+end
+
+function ColorUpdate2()
+    BoxEspYellow.BorderColor3 = CurrentColor
+    BoxEspPink.BorderColor3 = CurrentColor
+    BoxEspWhite.BorderColor3 = CurrentColor
+    BoxEspBlack.BorderColor3 = CurrentColor
+    MenuScroll.BorderColor3 = CurrentColor
+    CrosshairScroll.BorderColor3 = CurrentColor
+    NameEspScroll.BorderColor3 = CurrentColor
+    BoxEspScroll.BorderColor3 = CurrentColor
+    ChamsOpacityTextBox.BorderColor3 = CurrentColor
+    ChamsEspScroll.BorderColor3 = CurrentColor
+    ChamsEspColorDrop.BorderColor3 = CurrentColor
+    ChamsRed.BorderColor3 = CurrentColor
+    ChamsGreen.BorderColor3 = CurrentColor
+    ChamsBlue.BorderColor3 = CurrentColor
+    ChamsCyan.BorderColor3 = CurrentColor
+    ChamsYellow.BorderColor3 = CurrentColor
+    ChamsPink.BorderColor3 = CurrentColor
+    ChamsPurple.BorderColor3 = CurrentColor
+    ChamsOrange.BorderColor3 = CurrentColor
+    ChamsWhite.BorderColor3 = CurrentColor
+    ChamsBlack.BorderColor3 = CurrentColor
+    FovChangerToggle.BorderColor3 = CurrentColor
+    FovChangerTextBox.BorderColor3 = CurrentColor
+    FovChangerToggle.TextColor3 = CurrentColor
+    ConsoleToggle.BorderColor3 = CurrentColor
+    ConsoleToggle.TextColor3 = CurrentColor
+end
+
+function LightModeUpdate()
+    TabHolder.BackgroundColor3 = CurrentMode
+    HomeFrame.BackgroundColor3 = CurrentMode
+    WatermarkBackground.BackgroundColor3 = CurrentMode
+    LegitTab.BackgroundColor3 = CurrentMode
+    MenuRed.BackgroundColor3 = CurrentMode
+    ChangeLogButton.BackgroundColor3 = CurrentMode
+    RageTab.BackgroundColor3 = CurrentMode
+    VisualsTab.BackgroundColor3 = CurrentMode
+    MiscTab.BackgroundColor3 = CurrentMode
+    ColorsTab.BackgroundColor3 = CurrentMode
+    RageTabButton.BackgroundColor3 = CurrentMode
+    LegitTabButton.BackgroundColor3 = CurrentMode
+    MiscTabButton.BackgroundColor3 = CurrentMode
+    ColorsTabButton.BackgroundColor3 = CurrentMode
+    VisualsTabButton.BackgroundColor3 = CurrentMode
+    MenuPink.BackgroundColor3 = CurrentMode
+    MenuYellow.BackgroundColor3 = CurrentMode
+    MenuGreen.BackgroundColor3 = CurrentMode
+    MenuColorDrop.BackgroundColor3 = CurrentMode
+    MenuBlue.BackgroundColor3 = CurrentMode
+    WatermarkToggle.BackgroundColor3 = CurrentMode
+    DrawCrosshair.BackgroundColor3 = CurrentMode
+    ChatSpamToggle.BackgroundColor3 = CurrentMode
+    CrosshairColorDrop.BackgroundColor3 = CurrentMode
+    CrosshairRed.BackgroundColor3 = CurrentMode
+    CrosshairGreen.BackgroundColor3 = CurrentMode
+    CrosshairBlue.BackgroundColor3 = CurrentMode
+    CrosshairWhite.BackgroundColor3 = CurrentMode
+    CrosshairPink.BackgroundColor3 = CurrentMode
+    CrosshairYellow.BackgroundColor3 = CurrentMode
+    CrosshairBlack.BackgroundColor3 = CurrentMode
+    SkinChangerButton.BackgroundColor3 = CurrentMode
+    LightModeToggle.BackgroundColor3 = CurrentMode
+    KillAllButton.BackgroundColor3 = CurrentMode
+    EspRefreshButton.BackgroundColor3 = CurrentMode
+    EspNamesToggle.BackgroundColor3 = CurrentMode
+    EspTeamToggle.BackgroundColor3 = CurrentMode
+    EspBoxesToggle.BackgroundColor3 = CurrentMode
+    EspChamsToggle.BackgroundColor3 = CurrentMode
+    EspHealthBarToggle.BackgroundColor3 = CurrentMode
+    NameEspColorDrop.BackgroundColor3 = CurrentMode
+    NameEspRed.BackgroundColor3 = CurrentMode
+    NameEspGreen.BackgroundColor3 = CurrentMode
+    NameEspBlue.BackgroundColor3 = CurrentMode
+    NameEspYellow.BackgroundColor3 = CurrentMode
+    NameEspPink.BackgroundColor3 = CurrentMode
+    NameEspWhite.BackgroundColor3 = CurrentMode
+    NameEspBlack.BackgroundColor3 = CurrentMode
+    BoxEspColorDrop.BackgroundColor3 = CurrentMode
+    BoxEspRed.BackgroundColor3 = CurrentMode
+    BoxEspGreen.BackgroundColor3 = CurrentMode
+    BoxEspBlue.BackgroundColor3 = CurrentMode
+    BoxEspYellow.BackgroundColor3 = CurrentMode
+    BoxEspPink.BackgroundColor3 = CurrentMode
+    BoxEspWhite.BackgroundColor3 = CurrentMode
+    BoxEspBlack.BackgroundColor3 = CurrentMode    
+    MenuScroll.BackgroundColor3 = CurrentMode
+    CrosshairScroll.BackgroundColor3 = CurrentMode
+    LightModeUpdate2()
+end
+
+function LightModeUpdate2()
+    BoxEspScroll.BackgroundColor3 = CurrentMode
+    NameEspScroll.BackgroundColor3 = CurrentMode
+    ChamsOpacityTextBox.BackgroundColor3 = CurrentMode
+    ChamsEspScroll.BackgroundColor3 = CurrentMode
+    ChamsEspColorDrop.BackgroundColor3 = CurrentMode
+    ChamsRed.BackgroundColor3 = CurrentMode
+    ChamsGreen.BackgroundColor3 = CurrentMode
+    ChamsBlue.BackgroundColor3 = CurrentMode
+    ChamsCyan.BackgroundColor3 = CurrentMode
+    ChamsYellow.BackgroundColor3 = CurrentMode
+    ChamsPink.BackgroundColor3 = CurrentMode
+    ChamsPurple.BackgroundColor3 = CurrentMode
+    ChamsOrange.BackgroundColor3 = CurrentMode
+    ChamsWhite.BackgroundColor3 = CurrentMode
+    ChamsBlack.BackgroundColor3 = CurrentMode
+    FovChangerToggle.BackgroundColor3 = CurrentMode
+    FovChangerTextBox.BackgroundColor3 = CurrentMode
+    ConsoleToggle.BackgroundColor3 = CurrentMode
+end
+
+function TextColorUpdate()
+    HomeHeader.TextColor3 = CurrentText
+    WelcomeLabel.TextColor3 = CurrentText
+    WatermarkBackground.TextColor3 = CurrentText
+    ChangeLogButton.TextColor3 = CurrentText
+    WatermarkLabel.TextColor3 = CurrentText
+    ChatSpamLabel.TextColor3 = CurrentText
+    DrawCrosshairLabel.TextColor3 = CurrentText
+    SkinChangerButton.TextColor3 = CurrentText
+    MenuColorDrop.TextColor3 = CurrentText
+    MenuRed.TextColor3 = CurrentText
+    MenuGreen.TextColor3 = CurrentText
+    MenuBlue.TextColor3 = CurrentText
+    MenuYellow.TextColor3 = CurrentText
+    MenuPink.TextColor3 = CurrentText
+    CrosshairColorDrop.TextColor3 = CurrentText
+    CrosshairRed.TextColor3 = CurrentText
+    CrosshairGreen.TextColor3 = CurrentText
+    CrosshairBlue.TextColor3 = CurrentText
+    CrosshairYellow.TextColor3 = CurrentText
+    CrosshairPink.TextColor3 = CurrentText
+    CrosshairWhite.TextColor3 = CurrentText
+    CrosshairBlack.TextColor3 = CurrentText
+    LightModeLabel.TextColor3 = CurrentText
+    LegitHeader.TextColor3 = CurrentText
+    RageHeader.TextColor3 = CurrentText
+    VisualsHeader.TextColor3 = CurrentText
+    MiscHeader.TextColor3 = CurrentText
+    ColorsHeader.TextColor3 = CurrentText
+    KillAllButton.TextColor3 = CurrentText
+    EspRefreshButton.TextColor3 = CurrentText
+    EspNamesLabel.TextColor3 = CurrentText
+    EspTeamLabel.TextColor3 = CurrentText
+    EspBoxesLabel.TextColor3 = CurrentText
+    EspChamsLabel.TextColor3 = CurrentText
+    EspHealthBarLabel.TextColor3 = CurrentText
+    NameEspColorDrop.TextColor3 = CurrentText
+    BoxEspColorDrop.TextColor3 = CurrentText
+    NameEspRed.TextColor3 = CurrentText
+    NameEspGreen.TextColor3 = CurrentText
+    NameEspBlue.TextColor3 = CurrentText
+    NameEspYellow.TextColor3 = CurrentText
+    NameEspPink.TextColor3 = CurrentText
+    NameEspWhite.TextColor3 = CurrentText
+    NameEspBlack.TextColor3 = CurrentText
+    BoxEspRed.TextColor3 = CurrentText
+    BoxEspGreen.TextColor3 = CurrentText
+    BoxEspBlue.TextColor3 = CurrentText
+    BoxEspYellow.TextColor3 = CurrentText
+    BoxEspPink.TextColor3 = CurrentText
+    BoxEspWhite.TextColor3 = CurrentText
+    BoxEspBlack.TextColor3 = CurrentText
+    TextColorUpdate2()
+end
+
+function TextColorUpdate2()
+    ChamsOpacityTextBox.TextColor3 = CurrentText
+    ChamsEspColorDrop.TextColor3 = CurrentText
+    ChamsRed.TextColor3 = CurrentText
+    ChamsGreen.TextColor3 = CurrentText
+    ChamsBlue.TextColor3 = CurrentText
+    ChamsCyan.TextColor3 = CurrentText
+    ChamsYellow.TextColor3 = CurrentText
+    ChamsPink.TextColor3 = CurrentText
+    ChamsPurple.TextColor3 = CurrentText
+    ChamsOrange.TextColor3 = CurrentText
+    ChamsWhite.TextColor3 = CurrentText
+    ChamsBlack.TextColor3 = CurrentText
+    ChamsOpacityLabel.TextColor3 = CurrentText
+    FovChangerLabel.TextColor3 = CurrentText
+    FovTextBoxLabel.TextColor3 = CurrentText
+    FovChangerTextBox.TextColor3 = CurrentText
+    ConsoleToggleLabel.TextColor3 = CurrentText
+end
+
+function CrosshairUpdate()
+    DrawnCrosshair.ImageColor3 = CrosshairColor
+end
+
+UserInputService.InputBegan:Connect(function(input)
+	if input.KeyCode == Enum.KeyCode.RightShift then
+        Menu.Enabled = not Menu.Enabled
+	end
+end)
+
+function RefreshHealthEsp()
+    HealthEspEnabled = not HealthEspEnabled
+
+    CreateNotification("Refreshing Health...", 1.5)
+
+    wait(0.5)
+
+    for i,v in pairs (game:GetService("Players"):GetPlayers()) do
+        if v ~= game:GetService("Players").LocalPlayer and v.Character ~= nil then
+            if v.Character:FindFirstChild("Head") ~= nil then
+                if v.Character.Head:FindFirstChild("HealthGui") ~= nil then
+                    v.Character.Head.HealthGui:Destroy()
+                end
+            end
+        end
+    end
+
+    wait(0.5)
+    HealthEspEnabled = not HealthEspEnabled
+
+    if HealthEspEnabled == true then
+        EspHealthBarToggle.Text = "✓"
+    else
+        EspHealthBarToggle.Text = ""
+    end
+end
+
+function RefreshNameEsp()
+    EspEnabled = not EspEnabled
+
+    CreateNotification("Refreshing Names...", 1.5)
+
+    wait(0.5)
+
+    for i,v in pairs (game:GetService("Players"):GetPlayers()) do
+        if v ~= game:GetService("Players").LocalPlayer and v.Character ~= nil then
+            if v.Character:FindFirstChild("Head") ~= nil then
+                if v.Character.Head:FindFirstChild("NameEsp") ~= nil then
+                    v.Character.Head.NameEsp:Destroy()
+                end
+            end
+        end
+    end
+
+    wait(0.5)
+    EspEnabled = not EspEnabled
+
+    if EspEnabled == true then
+        EspNamesToggle.Text = "✓"
+    else
+        EspNamesToggle.Text = ""
+    end
+end
+
+function UpdateChams()
+    ChamsEnabled = not ChamsEnabled
+
+    CreateNotification("Refreshing Chams...", 1.5)
+
+    wait(0.5)
+
+    for i,v in pairs (game:GetService("Players"):GetPlayers()) do
+        if v ~= game:GetService("Players").LocalPlayer and v.Character then
+            for i,v in pairs (v.Character:GetChildren()) do
+                if v:IsA("MeshPart") or v.Name == "Head" or v.Name == "Torso" or v.Name == "Right Arm" or v.Name == "Left Arm" or v.Name == "Right Leg" or v.Name == "Left Leg" then
+                    for i,v in pairs(v:GetDescendants()) do
+                        if v:IsA("SurfaceGui") then
+                            v:Destroy()
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    wait(0.5)
+    ChamsEnabled = not ChamsEnabled
+
+    if ChamsEnabled == true then
+        EspChamsToggle.Text = "✓"
+    else
+        EspChamsToggle.Text = ""
+    end
+end
+
+function RefreshBoxEsp()
+    BoxEspEnabled = not BoxEspEnabled
+
+    CreateNotification("Refreshing Boxes...", 1.5)
+
+    wait(0.5)
+
+    for i,v in pairs (game:GetService("Players"):GetPlayers()) do
+        if v ~= game:GetService("Players").LocalPlayer and v.Character ~= nil then
+            if v.Character:FindFirstChild("HumanoidRootPart") then
+                if v.Character.HumanoidRootPart:FindFirstChild("BoxEsp") then
+                    v.Character.HumanoidRootPart.BoxEsp:Destroy()
+                end
+            end
+        end
+    end
+
+    wait(0.5)
+    BoxEspEnabled = not BoxEspEnabled
+
+    if BoxEspEnabled == true then
+        EspBoxesToggle.Text = "✓"
+    else
+        EspBoxesToggle.Text = ""
+    end
+end
+
+function ChatSpamFunction()
+    while ChatSpam do
+        if game.PlaceId == 301549746 then
+            game:GetService("ReplicatedStorage").Events.PlayerChatted:FireServer(ChatTable[math.random(1,#ChatTable)], false, "Innocent", false, true)
+            wait(3)
+        else
+            game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(ChatTable[math.random(1, #ChatTable)], "All")
+            wait(3)
+        end
+    end
+end
+
+function UpdateFov()
+    coroutine.wrap(function()
+        while CustomFovEnabled do
+            game.Workspace.CurrentCamera.FieldOfView = CustomFov
+            wait(0.2)
+        end
+   end)()
+end
+
+function UpdateTime()
+    Seconds = Seconds + 1
+
+    if Seconds == 60 then
+        Minutes = Minutes + 1
+        Seconds = 0
+    end
+
+    if Minutes == 60 then
+        Hours = Hours + 1
+        Minutes = 0
+    end
+
+    WatermarkBackground.Text = "Ninelives "..Version.." | "..Plr.Name.." | "..Hours..":"..Minutes..":"..Seconds..""
+end
+
+coroutine.wrap(function()
+    while wait(1) do
+        UpdateTime()
+    end
+end)()n()
     BoxEspColor = Yellow
     wait(0.5)
     RefreshBoxEsp()
