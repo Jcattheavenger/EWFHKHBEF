@@ -447,6 +447,7 @@ CmdTextBox.FocusLost:Connect(function()
 
     elseif NewLine.Text == "- unload" then
         Folder:Destroy()
+        CustomFovEnabled = false
         game.Workspace.CurrentCamera.FieldOfView = 70
         ChatSpam = false
         BoxEspEnabled = false
