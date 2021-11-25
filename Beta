@@ -711,9 +711,9 @@ EspNamesToggle.MouseButton1Click:Connect(function()
         EspNamesToggle.Text = ""
         for i,v in pairs (game:GetService("Players"):GetPlayers()) do
             if v ~= game:GetService("Players").LocalPlayer and v.Character ~= nil then
-                if v.Character:FindFirstChild("Head") ~= nil then
-                    if v.Character.Head:FindFirstChild("NameEsp") ~= nil then
-                        v.Character.Head.NameEsp:Destroy()
+                if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                    if v.Character.HumanoidRootPart:FindFirstChild("NameEsp") ~= nil then
+                        v.Character.HumanoidRootPart.NameEsp:Destroy()
                     end
                 end
             end
@@ -788,7 +788,7 @@ EspBoxesToggle.MouseButton1Click:Connect(function()
         EspBoxesToggle.Text = ""
         for i,v in pairs (game:GetService("Players"):GetPlayers()) do
             if v ~= game:GetService("Players").LocalPlayer and v.Character ~= nil then
-                if v.Character:FindFirstChild("Head") ~= nil then
+                if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
                     if v.Character.HumanoidRootPart:FindFirstChild("BoxEsp") ~= nil then
                         v.Character.HumanoidRootPart.BoxEsp:Destroy()
                     end
