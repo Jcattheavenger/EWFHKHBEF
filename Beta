@@ -387,6 +387,20 @@ ConsoleSpace.BackgroundTransparency = 1
 ConsoleSpace.BorderSizePixel = 0
 ConsoleSpace.CanvasSize = UDim2.new(0, 0, 4, 0)
 
+function zigzag(X) return math.acos(math.cos(X*math.pi))/math.pi end
+
+counter = 0
+
+function rainbow()
+    coroutine.wrap(function()
+        while wait(0.1)do
+        CurrentColor = Color3.fromHSV(zigzag(counter),1,1)
+        ColorUpdate()
+        counter = counter + 0.01
+        end
+    end)()
+end
+
 CmdTextBox.Name = "CmdTextBox"
 CmdTextBox.AnchorPoint = Vector2.new(0.5, 0.5)
 CmdTextBox.Position = UDim2.new(0.5, 0, 0.95, 0)
@@ -446,6 +460,7 @@ CmdTextBox.FocusLost:Connect(function()
         end
 
     elseif NewLine.Text == "- unload" then
+
         Folder:Destroy()
         CustomFovEnabled = false
         game.Workspace.CurrentCamera.FieldOfView = 70
@@ -454,6 +469,11 @@ CmdTextBox.FocusLost:Connect(function()
         HealthEspEnabled = false
         EspEnabled = false
         ChamsEnabled = false
+
+    elseif NewLine.Text == "- rainbow" then
+
+        rainbow()
+        
     end
 end)
 
@@ -485,13 +505,14 @@ end)
 
 CreateLine("cmds| Shows commands list", 1, 0.04, CommandsList)
 CreateLine("clear| Clears console space", 1, 0.08, CommandsList)
-CreateLine("crash| Crashes local game", 1, 0.32, CommandsList)
-CreateLine("unload| Unloads cheat", 1, 0.36, CommandsList)
-CreateLine("shadow| Changes menu color to secret color", 1, 0.12, CommandsList)
-CreateLine("refresh names| Refreshes name esp", 1, 0.16, CommandsList)
-CreateLine("refresh boxes| Refreshes box esp", 1, 0.2, CommandsList)
-CreateLine("refresh chams| Refreshes chams esp", 1, 0.24, CommandsList)
-CreateLine("refresh health| Refreshes health esp", 1, 0.28, CommandsList)
+CreateLine("crash| Crashes local game", 1, 0.12, CommandsList)
+CreateLine("unload| Unloads cheat", 1, 0.16, CommandsList)
+CreateLine("shadow| Changes menu color to secret color", 1, 0.2, CommandsList)
+CreateLine("rainbow| Rainbow menu color, currently cant disable", 1, 0.24, CommandsList)
+CreateLine("refresh names| Refreshes name esp", 1, 0.28, CommandsList)
+CreateLine("refresh boxes| Refreshes box esp", 1, 0.32, CommandsList)
+CreateLine("refresh chams| Refreshes chams esp", 1, 0.36, CommandsList)
+CreateLine("refresh health| Refreshes health esp", 1, 0.4, CommandsList)
 --<End>--
 
 --<Avatar/Welcoming>--
