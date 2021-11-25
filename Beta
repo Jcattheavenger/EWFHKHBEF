@@ -6,7 +6,7 @@ Sound.PlayOnRemove = true
 Sound:Destroy()
 ---<End>---
 
-local Version = "v1.8.4"
+local Version = "v1.8.5"
 
 function CreateNotification(vText, vDuration, vButton)
     game:GetService("StarterGui"):SetCore("SendNotification", {
@@ -958,7 +958,7 @@ function Update()
                         end
                     end
                     if v ~= game.Players.LocalPlayer and v.Character ~= nil and v.TeamColor ~= game:GetService("Players").LocalPlayer.TeamColor then
-                        if v.Character:FindFirstChild("HumnanoidRootPart") ~= nil then
+                        if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
                             if v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp") then
                                 if v.Character:FindFirstChild("Humanoid") then
                                     v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp").Text = "%"..math.floor(v.Character.Humanoid.Health)..""
@@ -1854,9 +1854,9 @@ function RefreshHealthEsp()
 
     for i,v in pairs (game:GetService("Players"):GetPlayers()) do
         if v ~= game:GetService("Players").LocalPlayer and v.Character ~= nil then
-            if v.Character:FindFirstChild("Head") ~= nil then
-                if v.Character.Head:FindFirstChild("HealthGui") ~= nil then
-                    v.Character.Head.HealthGui:Destroy()
+            if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                if v.Character.HumanoidRootPart:FindFirstChild("HealthGui") ~= nil then
+                    v.Character.HumanoidRootPart.HealthGui:Destroy()
                 end
             end
         end
@@ -1881,9 +1881,9 @@ function RefreshNameEsp()
 
     for i,v in pairs (game:GetService("Players"):GetPlayers()) do
         if v ~= game:GetService("Players").LocalPlayer and v.Character ~= nil then
-            if v.Character:FindFirstChild("Head") ~= nil then
-                if v.Character.Head:FindFirstChild("NameEsp") ~= nil then
-                    v.Character.Head.NameEsp:Destroy()
+            if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                if v.Character.HumanoidRootPart:FindFirstChild("NameEsp") ~= nil then
+                    v.Character.HumanoidRootPart.NameEsp:Destroy()
                 end
             end
         end
