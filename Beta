@@ -1232,8 +1232,9 @@ AimbotKeyTextBox.FocusLost:Connect(function()
         AimbotKey = Enum.KeyCode.Y
     elseif AimbotKeyTextBox.Text == "z" then
         AimbotKey = Enum.KeyCode.Z
+    else
+        CreateNotification("Value must be letter", 5)
     end
-    CreateNotification("Value must be letter", 5)
 end)
 --<End>--
 
