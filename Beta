@@ -6,7 +6,7 @@ Sound.PlayOnRemove = true
 Sound:Destroy()
 ---<End>---
 
-local Version = "v1.8.5"
+local Version = "v1.8.9"
 
 function CreateNotification(vText, vDuration, vButton)
     game:GetService("StarterGui"):SetCore("SendNotification", {
@@ -76,7 +76,14 @@ local VisualsTabButton = Instance.new("TextButton",TabHolder)
 local MiscTabButton = Instance.new("TextButton",TabHolder)
 local ColorsTabButton = Instance.new("TextButton",TabHolder)
 
-local TempButton = Instance.new("TextButton",RageTab)
+local AimbotToggle = Instance.new("TextButton",LegitTab)
+local AimbotToggleLabel = Instance.new("TextLabel",AimbotToggle)
+local AimbotTeamCheckToggle = Instance.new("TextButton",LegitTab)
+local AimbotTeamCheckLabel = Instance.new("TextLabel",AimbotTeamCheckToggle)
+local AimbotSmoothing = Instance.new("TextBox",LegitTab)
+local AimbotSmoothingLabel = Instance.new("TextLabel",AimbotSmoothing)
+local AimbotKeyTextBox = Instance.new("TextBox",LegitTab)
+local AimbotKeyLabel = Instance.new("TextLabel",AimbotKeyTextBox)
 
 local ChangeLog = Instance.new("TextLabel",Menu)
 local ChangeLogButton = Instance.new("TextButton",HomeFrame)
@@ -99,6 +106,8 @@ local EspChamsLabel = Instance.new("TextLabel",EspChamsToggle)
 local EspHealthBarToggle = Instance.new("TextButton",VisualsTab)
 local EspHealthBarLabel = Instance.new("TextLabel",EspHealthBarToggle)
 local EspRefreshButton = Instance.new("TextButton",VisualsTab)
+
+local RemoveRecoilButton = Instance.new("TextButton",LegitTab)
 
 local Crosshair = Instance.new("ScreenGui",Folder)
 local DrawnCrosshair = Instance.new("ImageLabel",Crosshair)
@@ -238,6 +247,10 @@ local BoxEspEnabled = false
 local ChamsEnabled = false
 local HealthEspEnabled = false
 local LightMode = false
+local AimbotEnabled = false
+local AimbotTeamCheck = true
+local AimbotSpeed = 0.01
+local AimbotKey = Enum.KeyCode.E
 local TeamCheck = true
 local CustomFovEnabled = false
 local CustomFov = 70
@@ -469,6 +482,7 @@ CmdTextBox.FocusLost:Connect(function()
         HealthEspEnabled = false
         EspEnabled = false
         ChamsEnabled = false
+        AimbotEnabled = false
 
     elseif NewLine.Text == "- rainbow" then
 
@@ -624,8 +638,95 @@ AddUICheckBox(EspChamsToggle, "EspChamsToggle", Right, 0.4, "")
 AddUICheckBox(EspHealthBarToggle, "EspHealthBarToggle", Left, 0.6, "")
 AddUICheckBox(FovChangerToggle, "FovChangerToggle", Right, 0.6, "")
 AddUICheckBox(ConsoleToggle, "ConsoleToggle", Left, 0.8, "")
+AddUICheckBox(AimbotToggle, "AimbotToggle", Left, 0.2, "")
+AddUICheckBox(AimbotTeamCheckToggle, "AimbotTeamCheckToggle", Right, 0.2, "✓")
 
 --<Checkbox Functions>--
+_G.aimbot = false
+AimbotToggle.MouseButton1Click:Connect(function()
+    AimbotEnabled = not AimbotEnabled
+    print(AimbotEnabled)
+
+    if AimbotEnabled then
+        AimbotToggle.Text = "✓"
+        _G.aimbot = true
+    else
+        AimbotToggle.Text = ""
+        _G.aimbot = false
+    end
+end)
+
+--<Aimbot>--
+function getClosest()
+    local dist = math.huge
+    local target = nil
+    for i,v in pairs (game:GetService("Players"):GetPlayers()) do
+        if AimbotTeamCheck then
+            if v ~= game:GetService("Players").LocalPlayer then
+                if v.Character and v.Character:FindFirstChild("Head") and v.Team ~= game:GetService("Players").LocalPlayer.Team and _G.aimbot and v.Character:FindFirstChild("Humanoid") then
+                    if v.Character.Humanoid.Health > 0 then
+                        local magnitude = (v.Character.Head.Position - game:GetService("Players").LocalPlayer.Character.Head.Position).magnitude
+                        if magnitude < dist then
+                            dist = magnitude
+                            target = v
+                        end
+                    end
+                end
+            end
+        else
+            if v ~= game:GetService("Players").LocalPlayer then
+                if v.Character and v.Character:FindFirstChild("Head") and _G.aimbot and v.Character:FindFirstChild("Humanoid") then
+                    if v.Character.Humanoid.Health > 0 then
+                        local magnitude = (v.Character.Head.Position - game:GetService("Players").LocalPlayer.Character.Head.Position).magnitude
+                        if magnitude < dist then
+                            dist = magnitude
+                            target = v
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return target
+end
+
+getClosest()    
+
+coroutine.wrap(function()
+    while wait() do
+        if AimbotEnabled then
+            game.UserInputService.InputBegan:Connect(function(input)
+                if input.KeyCode == AimbotKey then
+                _G.aim = true
+                while wait() do
+                        local Tween = game.TweenService:create(game.workspace.CurrentCamera, TweenInfo.new(AimbotSpeed), {CFrame = CFrame.new(game.workspace.CurrentCamera.CFrame.Position, getClosest().Character.Head.Position)})
+                        Tween:Play()
+                        if _G.aim == false then Tween:Cancel() return end
+                    end
+                end
+            end)
+            game.UserInputService.InputEnded:Connect(function(input)
+                if input.KeyCode == AimbotKey then
+                    _G.aim = false
+                end
+            end)
+            wait()
+        else
+            _G.aim = false
+        end
+    end
+end)()
+--<End>--
+
+AimbotTeamCheckToggle.MouseButton1Click:Connect(function()
+    AimbotTeamCheck = not AimbotTeamCheck
+
+    if AimbotTeamCheck then
+        AimbotTeamCheckToggle.Text = "✓"
+    else
+        AimbotTeamCheckToggle.Text = ""
+    end
+end)
 
 ConsoleToggle.MouseButton1Click:Connect(function()
     MainFrame.Visible = not MainFrame.Visible
@@ -1016,10 +1117,10 @@ FovChangerToggle.MouseButton1Click:Connect(function()
 end)
 --<End>--
 
-function CreateTextBox(Variable, vName, vText)
+function CreateTextBox(Variable, vName, vText, PosX, PosY)
     Variable.Name = vName
     Variable.AnchorPoint = VectorCenter
-    Variable.Position = UDim2.new(0.5, 0, 2, 0)
+    Variable.Position = UDim2.new(PosX, 0, PosY, 0)
     Variable.Size = UDim2.new(0, 25, 0, 25)
     Variable.BorderColor3 = CurrentColor
     Variable.BackgroundColor3 = lBlack
@@ -1028,8 +1129,10 @@ function CreateTextBox(Variable, vName, vText)
     Variable.TextColor3 = White
 end
 
-CreateTextBox(ChamsOpacityTextBox, "ChamsOpacityTextBox", 5)
-CreateTextBox(FovChangerTextBox, "FovChangerTextBox", 70)
+CreateTextBox(ChamsOpacityTextBox, "ChamsOpacityTextBox", 5, 0.5, 2)
+CreateTextBox(FovChangerTextBox, "FovChangerTextBox", 70, 0.5, 2)
+CreateTextBox(AimbotSmoothing, "AimbotSmoothing", 0, Left, 0.4)
+CreateTextBox(AimbotKeyTextBox, "AimbotKeyTextBox", "e", Right, 0.4)
 
 --<TextBox Functions>--
 i = 1
@@ -1056,6 +1159,81 @@ FovChangerTextBox.FocusLost:Connect(function()
     CustomFov = FovChangerTextBox.Text
     CreateNotification("Refreshing Fov Value...", 1.5)
     UpdateFov()
+end)
+
+AimbotSmoothing.FocusLost:Connect(function()
+    if AimbotSmoothing.Text == "0" then
+        AimbotSpeed = 0.01
+    elseif AimbotSmoothing.Text == "1" then
+        AimbotSpeed = 0.25
+    elseif AimbotSmoothing.Text == "2"  then
+        AimbotSpeed = 0.5
+    elseif AimbotSmoothing.Text == "3" then
+        AimbotSpeed = 0.75
+    elseif AimbotSmoothing.Text == "4" then
+        AimbotSpeed = 1
+    elseif AimbotSmoothing.Text == "5" then
+        AimbotSpeed = 1.25
+    else
+        CreateNotification("Value must be 0-5", 5)
+    end
+end)
+
+AimbotKeyTextBox.FocusLost:Connect(function()
+    if AimbotKeyTextBox.Text == "a" then
+        AimbotKey = Enum.KeyCode.A
+    elseif AimbotKeyTextBox.Text == "b" then
+        AimbotKey = Enum.KeyCode.B
+    elseif AimbotKeyTextBox.Text == "c" then
+        AimbotKey = Enum.KeyCode.C
+    elseif AimbotKeyTextBox.Text == "d" then
+        AimbotKey = Enum.KeyCode.D
+    elseif AimbotKeyTextBox.Text == "e" then
+        AimbotKey = Enum.KeyCode.E
+    elseif AimbotKeyTextBox.Text == "f" then
+        AimbotKey = Enum.KeyCode.F
+    elseif AimbotKeyTextBox.Text == "g" then
+        AimbotKey = Enum.KeyCode.G
+    elseif AimbotKeyTextBox.Text == "h" then
+        AimbotKey = Enum.KeyCode.H
+    elseif AimbotKeyTextBox.Text == "i" then
+        AimbotKey = Enum.KeyCode.I
+    elseif AimbotKeyTextBox.Text == "j" then
+        AimbotKey = Enum.KeyCode.J
+    elseif AimbotKeyTextBox.Text == "k" then
+        AimbotKey = Enum.KeyCode.K
+    elseif AimbotKeyTextBox.Text == "l" then
+        AimbotKey = Enum.KeyCode.L
+    elseif AimbotKeyTextBox.Text == "m" then
+        AimbotKey = Enum.KeyCode.M
+    elseif AimbotKeyTextBox.Text == "n" then
+        AimbotKey = Enum.KeyCode.N
+    elseif AimbotKeyTextBox.Text == "o" then
+        AimbotKey = Enum.KeyCode.O
+    elseif AimbotKeyTextBox.Text == "p" then
+        AimbotKey = Enum.KeyCode.P
+    elseif AimbotKeyTextBox.Text == "q" then
+        AimbotKey = Enum.KeyCode.Q
+    elseif AimbotKeyTextBox.Text == "r" then
+        AimbotKey = Enum.KeyCode.R
+    elseif AimbotKeyTextBox.Text == "s" then
+        AimbotKey = Enum.KeyCode.S
+    elseif AimbotKeyTextBox.Text == "t" then
+        AimbotKey = Enum.KeyCode.T
+    elseif AimbotKeyTextBox.Text == "u" then
+        AimbotKey = Enum.KeyCode.U
+    elseif AimbotKeyTextBox.Text == "v" then
+        AimbotKey = Enum.KeyCode.V
+    elseif AimbotKeyTextBox.Text == "w" then
+        AimbotKey = Enum.KeyCode.W
+    elseif AimbotKeyTextBox.Text == "x" then
+        AimbotKey = Enum.KeyCode.X
+    elseif AimbotKeyTextBox.Text == "y" then
+        AimbotKey = Enum.KeyCode.Y
+    elseif AimbotKeyTextBox.Text == "z" then
+        AimbotKey = Enum.KeyCode.Z
+    end
+    CreateNotification("Value must be letter", 5)
 end)
 --<End>--
 
@@ -1085,6 +1263,10 @@ CreateLabel(ChamsOpacityLabel, "ChamsOpacityLabel", "Opacity 1-5")
 CreateLabel(FovTextBoxLabel, "FovTextBoxLabel", "Fov 1-120")
 CreateLabel(FovChangerLabel, "FovChangerLabel", "Fov Changer")
 CreateLabel(ConsoleToggleLabel, "ConsoleToggleLabel", "Console")
+CreateLabel(AimbotToggleLabel, "AimbotToggleLabel", "Aimbot")
+CreateLabel(AimbotTeamCheckLabel, "AimbotTeamCheckLabel", "Team Check")
+CreateLabel(AimbotSmoothingLabel, "AimbotSmoothingLabel", "Smoothing 0-5")
+CreateLabel(AimbotKeyLabel, "AimbotKeyLabel", "Aimbot Key")
 
 function AddUIButton(Variable, vName, PosX, PosY, vText)
     Variable.Name = vName
@@ -1108,7 +1290,7 @@ AddUIButton(CrosshairColorDrop, "CrosshairColorDrop", 0.8, 0.2, "Crosshair")
 AddUIButton(NameEspColorDrop, "NameEspColorDrop", 0.8, 0.4, "Names")
 AddUIButton(BoxEspColorDrop, "BoxEspColorDrop", 0.2, 0.6, "Boxes")
 AddUIButton(ChamsEspColorDrop, "ChamsEspColorDrop", 0.8, 0.6, "Chams")
-AddUIButton(TempButton, "TempButton", 0.2, 0.2, "Fps Gui")
+AddUIButton(RemoveRecoilButton, "RemoveRecoilButton", 0.2, 0.6, "Remove Recoil")
 
 function CreateScroll(Variable, vName, vSize)
     Variable.Name = vName
@@ -1130,9 +1312,10 @@ CreateScroll(BoxEspScroll, "BoxEspScroll", 7)
 CreateScroll(ChamsEspScroll, "ChamsEspScroll", 10)
 
 --<Button Functions>--
+RemoveRecoilButton.MouseButton1Click:Connect(function()
+    local env = getsenv(game:service('Players').LocalPlayer.PlayerGui.Client)
 
-TempButton.MouseButton1Click:Connect(function()
-    loadstring(game:HttpGet("https://pastebin.com/raw/cHKVsTg8", true))()
+    env.KickBack = function() end
 end)
 
 SkinChangerButton.MouseButton1Click:Connect(function()
@@ -1675,6 +1858,13 @@ function ColorUpdate2()
     FovChangerToggle.TextColor3 = CurrentColor
     ConsoleToggle.BorderColor3 = CurrentColor
     ConsoleToggle.TextColor3 = CurrentColor
+    AimbotToggle.BorderColor3 = CurrentColor
+    AimbotToggle.TextColor3 = CurrentColor
+    AimbotTeamCheckToggle.BorderColor3 = CurrentColor
+    AimbotTeamCheckToggle.TextColor3 = CurrentColor
+    AimbotSmoothing.BorderColor3 = CurrentColor
+    AimbotKeyTextBox.BorderColor3 = CurrentColor
+    RemoveRecoilButton.BorderColor3 = CurrentColor
 end
 
 function LightModeUpdate()
@@ -1758,6 +1948,11 @@ function LightModeUpdate2()
     FovChangerToggle.BackgroundColor3 = CurrentMode
     FovChangerTextBox.BackgroundColor3 = CurrentMode
     ConsoleToggle.BackgroundColor3 = CurrentMode
+    AimbotToggle.BackgroundColor3 = CurrentMode
+    AimbotTeamCheckToggle.BackgroundColor3 = CurrentMode
+    AimbotSmoothing.BackgroundColor3 = CurrentMode
+    AimbotKeyTextBox.BackgroundColor3 = CurrentMode
+    RemoveRecoilButton.BackgroundColor3 = CurrentMode
 end
 
 function TextColorUpdate()
@@ -1833,6 +2028,13 @@ function TextColorUpdate2()
     FovTextBoxLabel.TextColor3 = CurrentText
     FovChangerTextBox.TextColor3 = CurrentText
     ConsoleToggleLabel.TextColor3 = CurrentText
+    AimbotToggleLabel.TextColor3 = CurrentText
+    AimbotTeamCheckLabel.TextColor3 = CurrentText
+    AimbotSmoothingLabel.TextColor3 = CurrentText
+    AimbotKeyLabel.TextColor3 = CurrentText
+    RemoveRecoilButton.TextColor3 = CurrentText
+    AimbotSmoothing.TextColor3 = CurrentText
+    AimbotKeyTextBox.TextColor3 = CurrentText
 end
 
 function CrosshairUpdate()
