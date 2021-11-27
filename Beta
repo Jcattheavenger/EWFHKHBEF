@@ -6,7 +6,7 @@ Sound.PlayOnRemove = true
 Sound:Destroy()
 ---<End>---
 
-local Version = "v1.8.9"
+local Version = "v1.9.0"
 
 function CreateNotification(vText, vDuration, vButton)
     game:GetService("StarterGui"):SetCore("SendNotification", {
@@ -45,6 +45,8 @@ local PlrAvatarBackgroundUICorner = Instance.new("UICorner",PlrAvatarBackground)
 local PlrAvatar = Instance.new("ImageLabel",PlrAvatarBackground)
 
 local Logo = Instance.new("ImageButton",TabHolder)
+
+local Cursor = Instance.new("ImageLabel",Menu)
 
 local LegitTab = Instance.new("Frame",TabHolder)
 local RageTab = Instance.new("Frame",TabHolder)
@@ -342,6 +344,17 @@ end
 
 CreateDrawLine(HomeDrawLine, "HomeDrawLine")
 
+Cursor.Name = "Cursor"
+Cursor.Size = UDim2.new(0, 20, 0, 20)
+Cursor.BackgroundTransparency = 1
+Cursor.Image = "http://www.roblox.com/asset/?id=1463482469"
+
+coroutine.wrap(function()
+    game:GetService("RunService").RenderStepped:Connect(function()
+        Cursor.Position = UDim2.new(0, game.Players.LocalPlayer:GetMouse().X, 0, game.Players.LocalPlayer:GetMouse().Y)
+    end)
+end)()
+
 --<Console>--
 function CreateLine(vText, vColor, PosY, vParent)
     NewLine = Instance.new("TextLabel",vParent)
@@ -564,7 +577,7 @@ ChangeLog.Size = UDim2.new(0, 350, 0, 500)
 ChangeLog.BorderSizePixel = 2
 ChangeLog.BackgroundColor3 = White
 ChangeLog.BorderColor3 = Black
-ChangeLog.Text = "Ninelives "..Version.." \n Built 11.26.21 \n \n Major code optimization, added console, added HomeFrame, major debugging, added chat spammer fix for counter blox, added loading system with whitelists, esp is almost finished, made boxes way thicker, added change log, removed bananna knife due to detection, working on aimbot. Currently very buggy! Issues: Esp is very buggy (Mostly fixed now), do not change color/refresh esp/change opacity without enabling the feature you are changing first, if you have problems click refresh esp and go from there, chat spammer spams multiple times after reenabling, crosshair sometimes draws over menu when enabled for the first time. \n \n Credits: \n Jcat (Coder) \n All tetesters and mods! \n Anyone I pasted from (Skin changer and Mod weapon)"
+ChangeLog.Text = "Ninelives "..Version.." \n Built 11.27.21 \n \n Major code optimization, added console, added HomeFrame, major debugging, added chat spammer fix for counter blox, added loading system with whitelists, esp is almost finished, made boxes way thicker, added change log, removed bananna knife due to detection, working on aimbot. Currently very buggy! Issues: Esp is very buggy (Mostly fixed now), do not change color/refresh esp/change opacity without enabling the feature you are changing first, if you have problems click refresh esp and go from there, chat spammer spams multiple times after reenabling, crosshair sometimes draws over menu when enabled for the first time. \n \n Credits: \n Jcat (Coder) \n All tetesters and mods! \n Anyone I pasted from (Skin changer and Mod weapon)"
 ChangeLog.TextScaled = true
 ChangeLog.TextColor3 = Red
 ChangeLog.Active = true
@@ -666,7 +679,8 @@ function getClosest()
                 if v.Character and v.Character:FindFirstChild("Head") and v.Team ~= game:GetService("Players").LocalPlayer.Team and _G.aimbot and v.Character:FindFirstChild("Humanoid") then
                     if v.Character.Humanoid.Health > 0 then
                         local magnitude = (v.Character.Head.Position - game:GetService("Players").LocalPlayer.Character.Head.Position).magnitude
-                        if magnitude < dist then
+                        local _, withinScreenBounds = game.Workspace.CurrentCamera:WorldToScreenPoint(v.Character:FindFirstChild("Head").Position)
+                        if magnitude < dist and withinScreenBounds then
                             dist = magnitude
                             target = v
                         end
@@ -678,7 +692,8 @@ function getClosest()
                 if v.Character and v.Character:FindFirstChild("Head") and _G.aimbot and v.Character:FindFirstChild("Humanoid") then
                     if v.Character.Humanoid.Health > 0 then
                         local magnitude = (v.Character.Head.Position - game:GetService("Players").LocalPlayer.Character.Head.Position).magnitude
-                        if magnitude < dist then
+                        local _, withinScreenBounds = game.Workspace.CurrentCamera:WorldToScreenPoint(v.Character.Head.Position)
+                        if magnitude < dist and withinScreenBounds then
                             dist = magnitude
                             target = v
                         end
@@ -690,18 +705,20 @@ function getClosest()
     return target
 end
 
-getClosest()    
+getClosest()
 
 coroutine.wrap(function()
     while wait() do
         if AimbotEnabled then
             game.UserInputService.InputBegan:Connect(function(input)
                 if input.KeyCode == AimbotKey then
-                _G.aim = true
-                while wait() do
-                        local Tween = game.TweenService:create(game.workspace.CurrentCamera, TweenInfo.new(AimbotSpeed), {CFrame = CFrame.new(game.workspace.CurrentCamera.CFrame.Position, getClosest().Character.Head.Position)})
-                        Tween:Play()
-                        if _G.aim == false then Tween:Cancel() return end
+                    _G.aim = true
+                    while wait() do
+                        if getClosest() then
+                            local Tween = game.TweenService:create(game.workspace.CurrentCamera, TweenInfo.new(AimbotSpeed), {CFrame = CFrame.new(game.workspace.CurrentCamera.CFrame.Position, getClosest().Character.Head.Position)})
+                            Tween:Play()
+                            if _G.aim == false then Tween:Cancel() return end
+                        end
                     end
                 end
             end)
@@ -1629,6 +1646,7 @@ function CreateTabButton(Variable, vName, Index, vText)
     Variable.Text = vText
     Variable.TextColor3 = lGrey
     Variable.TextSize = 15
+    Variable.Modal = true
 end
 
 CreateTabButton(LegitTabButton, "LegitTabButton", 0.25, "Legit")
