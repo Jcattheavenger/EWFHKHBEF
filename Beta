@@ -6,7 +6,7 @@ Sound.PlayOnRemove = true
 Sound:Destroy()
 ---<End>---
 
-local Version = "v1.9.0"
+local Version = "v1.9.5"
 
 function CreateNotification(vText, vDuration, vButton)
     game:GetService("StarterGui"):SetCore("SendNotification", {
@@ -577,7 +577,7 @@ ChangeLog.Size = UDim2.new(0, 350, 0, 500)
 ChangeLog.BorderSizePixel = 2
 ChangeLog.BackgroundColor3 = White
 ChangeLog.BorderColor3 = Black
-ChangeLog.Text = "Ninelives "..Version.." \n Built 11.27.21 \n \n Major code optimization, added console, added HomeFrame, major debugging, added chat spammer fix for counter blox, added loading system with whitelists, esp is almost finished, made boxes way thicker, added change log, removed bananna knife due to detection, working on aimbot. Currently very buggy! Issues: Esp is very buggy (Mostly fixed now), do not change color/refresh esp/change opacity without enabling the feature you are changing first, if you have problems click refresh esp and go from there, chat spammer spams multiple times after reenabling, crosshair sometimes draws over menu when enabled for the first time. \n \n Credits: \n Jcat (Coder) \n All tetesters and mods! \n Anyone I pasted from (Skin changer and Mod weapon)"
+ChangeLog.Text = "Ninelives "..Version.." \n Built 11.28.21 \n \n Major code optimization, added console, added HomeFrame, major debugging, added chat spammer fix for counter blox, added loading system with whitelists, esp is almost finished, made boxes way thicker, added change log, removed bananna knife due to detection, working on aimbot. Currently very buggy! Issues: Esp is very buggy (Mostly fixed now), do not change color/refresh esp/change opacity without enabling the feature you are changing first, if you have problems click refresh esp and go from there, chat spammer spams multiple times after reenabling, crosshair sometimes draws over menu when enabled for the first time. \n \n Credits: \n Jcat (Coder) \n All tetesters and mods! \n Anyone I pasted from (Skin changer and Mod weapon)"
 ChangeLog.TextScaled = true
 ChangeLog.TextColor3 = Red
 ChangeLog.Active = true
@@ -655,7 +655,6 @@ AddUICheckBox(AimbotToggle, "AimbotToggle", Left, 0.2, "")
 AddUICheckBox(AimbotTeamCheckToggle, "AimbotTeamCheckToggle", Right, 0.2, "✓")
 
 --<Checkbox Functions>--
-_G.aimbot = false
 AimbotToggle.MouseButton1Click:Connect(function()
     AimbotEnabled = not AimbotEnabled
     print(AimbotEnabled)
@@ -670,73 +669,90 @@ AimbotToggle.MouseButton1Click:Connect(function()
 end)
 
 --<Aimbot>--
-function getClosest()
-    local dist = math.huge
+local AimbotSettings = {
+    Aimbot = true,
+    Aiming = false,
+    AimbotSpeed = 0,
+    TeamCheck = true
+}
+
+UserInputService.InputBegan:Connect(function(Input)
+    if Input.KeyCode == AimbotKey then
+        AimbotSettings.Aiming = true
+    end
+end)
+
+UserInputService.InputEnded:Connect(function(Input)
+    if Input.KeyCode == AimbotKey then
+        AimbotSettings.Aiming = false
+    end
+end)
+
+game:GetService("RunService").RenderStepped:Connect(function()
+
+    local distance = math.huge
     local target = nil
-    for i,v in pairs (game:GetService("Players"):GetPlayers()) do
-        if AimbotTeamCheck then
-            if v ~= game:GetService("Players").LocalPlayer then
-                if v.Character and v.Character:FindFirstChild("Head") and v.Team ~= game:GetService("Players").LocalPlayer.Team and _G.aimbot and v.Character:FindFirstChild("Humanoid") then
-                    if v.Character.Humanoid.Health > 0 then
-                        local magnitude = (v.Character.Head.Position - game:GetService("Players").LocalPlayer.Character.Head.Position).magnitude
-                        local _, withinScreenBounds = game.Workspace.CurrentCamera:WorldToScreenPoint(v.Character:FindFirstChild("Head").Position)
-                        if magnitude < dist and withinScreenBounds then
-                            dist = magnitude
-                            target = v
+
+    if AimbotSettings.Aiming then
+
+        for _,v in pairs (game:GetService("Players"):GetChildren()) do
+            if AimbotSettings.TeamCheck then
+                if v ~= Plr and v.Team ~= Plr.Team and v.Character and v.Character:FindFirstChild("Humanoid") then
+                    if v.Character:FindFirstChild("Humanoid").Health > 0 and v.Character:FindFirstChild("Head") then
+
+                        local plr = v.Character
+                        local plrhead, onscreen = game.Workspace.CurrentCamera:WorldToViewportPoint(plr.Head.Position)
+
+                        if onscreen then
+
+                            local magnitude = (Vector2.new(Plr:GetMouse().X, Plr:GetMouse().Y) - Vector2.new(plrhead.X, plrhead.Y)).magnitude
+
+                            if magnitude < distance then
+                                distance = magnitude
+                                target = plr
+                            end
                         end
                     end
                 end
-            end
-        else
-            if v ~= game:GetService("Players").LocalPlayer then
-                if v.Character and v.Character:FindFirstChild("Head") and _G.aimbot and v.Character:FindFirstChild("Humanoid") then
-                    if v.Character.Humanoid.Health > 0 then
-                        local magnitude = (v.Character.Head.Position - game:GetService("Players").LocalPlayer.Character.Head.Position).magnitude
-                        local _, withinScreenBounds = game.Workspace.CurrentCamera:WorldToScreenPoint(v.Character.Head.Position)
-                        if magnitude < dist and withinScreenBounds then
-                            dist = magnitude
-                            target = v
+            else
+                if v ~= Plr and v.Character and v.Character:FindFirstChild("Humanoid") then
+                    if v.Character:FindFirstChild("Humanoid").Health > 0 and v.Character:FindFirstChild("Head") then
+
+                        local plr = v.Character
+                        local plrhead, onscreen = game.Workspace.CurrentCamera:WorldToViewportPoint(plr.Head.Position)
+
+                        if onscreen then
+
+                            local magnitude = (Vector2.new(Plr:GetMouse().X, Plr:GetMouse().Y) - Vector2.new(plrhead.X, plrhead.Y)).magnitude
+
+                            if magnitude < distance then
+                                distance = magnitude
+                                target = plr
+                            end
                         end
                     end
                 end
             end
         end
     end
-    return target
-end
+        
+    if target ~= nil and target:FindFirstChild("Humanoid") and target:FindFirstChild("Head") then
+        if target:FindFirstChild("Humanoid").Health > 0 then
 
-getClosest()
-
-coroutine.wrap(function()
-    while wait() do
-        if AimbotEnabled then
-            game.UserInputService.InputBegan:Connect(function(input)
-                if input.KeyCode == AimbotKey then
-                    _G.aim = true
-                    while wait() do
-                        if getClosest() then
-                            local Tween = game.TweenService:create(game.workspace.CurrentCamera, TweenInfo.new(AimbotSpeed), {CFrame = CFrame.new(game.workspace.CurrentCamera.CFrame.Position, getClosest().Character.Head.Position)})
-                            Tween:Play()
-                            if _G.aim == false then Tween:Cancel() return end
-                        end
-                    end
-                end
+            local Tween = game.TweenService:create(game.Workspace.CurrentCamera, TweenInfo.new(AimbotSettings.AimbotSpeed), {CFrame = CFrame.new(game.Workspace.CurrentCamera.CFrame.Position, target.Head.Position)})
+            Tween:Play()
+            UserInputService.InputEnded:Connect(function(Input)
+                if Input.KeyCode == Enum.KeyCode.E then
+                    Tween:Cancel() return end
             end)
-            game.UserInputService.InputEnded:Connect(function(input)
-                if input.KeyCode == AimbotKey then
-                    _G.aim = false
-                end
-            end)
-            wait()
-        else
-            _G.aim = false
         end
     end
-end)()
+end)
 --<End>--
 
 AimbotTeamCheckToggle.MouseButton1Click:Connect(function()
     AimbotTeamCheck = not AimbotTeamCheck
+    AimbotSettings.TeamCheck = not AimbotSettings.TeamCheck
 
     if AimbotTeamCheck then
         AimbotTeamCheckToggle.Text = "✓"
@@ -1180,17 +1196,17 @@ end)
 
 AimbotSmoothing.FocusLost:Connect(function()
     if AimbotSmoothing.Text == "0" then
-        AimbotSpeed = 0.01
+        AimbotSettings.AimbotSpeed = 0.01
     elseif AimbotSmoothing.Text == "1" then
-        AimbotSpeed = 0.25
+        AimbotSettings.AimbotSpeed = 0.25
     elseif AimbotSmoothing.Text == "2"  then
-        AimbotSpeed = 0.5
+        AimbotSettings.AimbotSpeed = 0.5
     elseif AimbotSmoothing.Text == "3" then
-        AimbotSpeed = 0.75
+        AimbotSettings.AimbotSpeed = 0.75
     elseif AimbotSmoothing.Text == "4" then
-        AimbotSpeed = 1
+        AimbotSettings.AimbotSpeed = 1
     elseif AimbotSmoothing.Text == "5" then
-        AimbotSpeed = 1.25
+        AimbotSettings.AimbotSpeed = 1.25
     else
         CreateNotification("Value must be 0-5", 5)
     end
