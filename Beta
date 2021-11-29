@@ -1096,6 +1096,15 @@ function Update()
                             if v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp") then
                                 if v.Character:FindFirstChild("Humanoid") then
                                     v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp").Text = "%"..math.floor(v.Character.Humanoid.Health)..""
+                                    if v.Character.Humanoid.Health > 74 then
+                                        v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp").TextColor3 = Green
+                                    elseif v.Character.Humanoid.Health > 49 then
+                                        v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp").TextColor3 = Yellow
+                                    elseif v.Character.Humanoid.Health > 24 then
+                                        v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp").TextColor3 = Orange
+                                    elseif v.Character.Humanoid.Health > 0 then
+                                        v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp").TextColor3 = Red
+                                    end
                                 end
                             end
                         end
@@ -1116,6 +1125,15 @@ function Update()
                             if v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp") then
                                 if v.Character:FindFirstChild("Humanoid") then
                                     v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp").Text = "%"..math.floor(v.Character.Humanoid.Health)..""
+                                    if v.Character.Humanoid.Health >= 75 then
+                                        v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp").TextColor3 = Green
+                                    elseif v.Character.Humanoid.Health >= 50 then
+                                        v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp").TextColor3 = Yellow
+                                    elseif v.Character.Humanoid.Health >= 25 then
+                                        v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp").TextColor3 = Orange
+                                    elseif v.Character.Humanoid.Health >= 0 then
+                                        v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp").TextColor3 = Red
+                                    end
                                 end
                             end
                         end
