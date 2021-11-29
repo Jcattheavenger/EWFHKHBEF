@@ -6,7 +6,7 @@ Sound.PlayOnRemove = true
 Sound:Destroy()
 ---<End>---
 
-local Version = "v1.8.2"
+local Version = "v1.9.5"
 
 function CreateNotification(vText, vDuration, vButton)
     game:GetService("StarterGui"):SetCore("SendNotification", {
@@ -46,6 +46,8 @@ local PlrAvatar = Instance.new("ImageLabel",PlrAvatarBackground)
 
 local Logo = Instance.new("ImageButton",TabHolder)
 
+local Cursor = Instance.new("ImageLabel",Menu)
+
 local LegitTab = Instance.new("Frame",TabHolder)
 local RageTab = Instance.new("Frame",TabHolder)
 local VisualsTab = Instance.new("Frame",TabHolder)
@@ -76,7 +78,14 @@ local VisualsTabButton = Instance.new("TextButton",TabHolder)
 local MiscTabButton = Instance.new("TextButton",TabHolder)
 local ColorsTabButton = Instance.new("TextButton",TabHolder)
 
-local TempButton = Instance.new("TextButton",RageTab)
+local AimbotToggle = Instance.new("TextButton",LegitTab)
+local AimbotToggleLabel = Instance.new("TextLabel",AimbotToggle)
+local AimbotTeamCheckToggle = Instance.new("TextButton",LegitTab)
+local AimbotTeamCheckLabel = Instance.new("TextLabel",AimbotTeamCheckToggle)
+local AimbotSmoothing = Instance.new("TextBox",LegitTab)
+local AimbotSmoothingLabel = Instance.new("TextLabel",AimbotSmoothing)
+local AimbotKeyTextBox = Instance.new("TextBox",LegitTab)
+local AimbotKeyLabel = Instance.new("TextLabel",AimbotKeyTextBox)
 
 local ChangeLog = Instance.new("TextLabel",Menu)
 local ChangeLogButton = Instance.new("TextButton",HomeFrame)
@@ -99,6 +108,8 @@ local EspChamsLabel = Instance.new("TextLabel",EspChamsToggle)
 local EspHealthBarToggle = Instance.new("TextButton",VisualsTab)
 local EspHealthBarLabel = Instance.new("TextLabel",EspHealthBarToggle)
 local EspRefreshButton = Instance.new("TextButton",VisualsTab)
+
+local RemoveRecoilButton = Instance.new("TextButton",LegitTab)
 
 local Crosshair = Instance.new("ScreenGui",Folder)
 local DrawnCrosshair = Instance.new("ImageLabel",Crosshair)
@@ -238,6 +249,10 @@ local BoxEspEnabled = false
 local ChamsEnabled = false
 local HealthEspEnabled = false
 local LightMode = false
+local AimbotEnabled = false
+local AimbotTeamCheck = true
+local AimbotSpeed = 0.01
+local AimbotKey = Enum.KeyCode.E
 local TeamCheck = true
 local CustomFovEnabled = false
 local CustomFov = 70
@@ -329,6 +344,17 @@ end
 
 CreateDrawLine(HomeDrawLine, "HomeDrawLine")
 
+Cursor.Name = "Cursor"
+Cursor.Size = UDim2.new(0, 20, 0, 20)
+Cursor.BackgroundTransparency = 1
+Cursor.Image = "http://www.roblox.com/asset/?id=1463482469"
+
+coroutine.wrap(function()
+    game:GetService("RunService").RenderStepped:Connect(function()
+        Cursor.Position = UDim2.new(0, game.Players.LocalPlayer:GetMouse().X, 0, game.Players.LocalPlayer:GetMouse().Y)
+    end)
+end)()
+
 --<Console>--
 function CreateLine(vText, vColor, PosY, vParent)
     NewLine = Instance.new("TextLabel",vParent)
@@ -386,6 +412,20 @@ ConsoleSpace.Size = UDim2.new(1, 0, 0.8, 0)
 ConsoleSpace.BackgroundTransparency = 1
 ConsoleSpace.BorderSizePixel = 0
 ConsoleSpace.CanvasSize = UDim2.new(0, 0, 4, 0)
+
+function zigzag(X) return math.acos(math.cos(X*math.pi))/math.pi end
+
+counter = 0
+
+function rainbow()
+    coroutine.wrap(function()
+        while wait(0.1)do
+        CurrentColor = Color3.fromHSV(zigzag(counter),1,1)
+        ColorUpdate()
+        counter = counter + 0.01
+        end
+    end)()
+end
 
 CmdTextBox.Name = "CmdTextBox"
 CmdTextBox.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -445,6 +485,22 @@ CmdTextBox.FocusLost:Connect(function()
         while true do
         end
 
+    elseif NewLine.Text == "- unload" then
+
+        Folder:Destroy()
+        CustomFovEnabled = false
+        game.Workspace.CurrentCamera.FieldOfView = 70
+        ChatSpam = false
+        BoxEspEnabled = false
+        HealthEspEnabled = false
+        EspEnabled = false
+        ChamsEnabled = false
+        AimbotEnabled = false
+
+    elseif NewLine.Text == "- rainbow" then
+
+        rainbow()
+        
     end
 end)
 
@@ -476,12 +532,14 @@ end)
 
 CreateLine("cmds| Shows commands list", 1, 0.04, CommandsList)
 CreateLine("clear| Clears console space", 1, 0.08, CommandsList)
-CreateLine("shadow| Changes menu color to secret color", 1, 0.12, CommandsList)
-CreateLine("refresh names| Refreshes name esp", 1, 0.16, CommandsList)
-CreateLine("refresh boxes| Refreshes box esp", 1, 0.2, CommandsList)
-CreateLine("refresh chams| Refreshes chams esp", 1, 0.24, CommandsList)
-CreateLine("refresh health| Refreshes health esp", 1, 0.28, CommandsList)
-CreateLine("crash| Crashes local game", 1, 0.32, CommandsList)
+CreateLine("crash| Crashes local game", 1, 0.12, CommandsList)
+CreateLine("unload| Unloads cheat", 1, 0.16, CommandsList)
+CreateLine("shadow| Changes menu color to secret color", 1, 0.2, CommandsList)
+CreateLine("rainbow| Rainbow menu color, currently cant disable", 1, 0.24, CommandsList)
+CreateLine("refresh names| Refreshes name esp", 1, 0.28, CommandsList)
+CreateLine("refresh boxes| Refreshes box esp", 1, 0.32, CommandsList)
+CreateLine("refresh chams| Refreshes chams esp", 1, 0.36, CommandsList)
+CreateLine("refresh health| Refreshes health esp", 1, 0.4, CommandsList)
 --<End>--
 
 --<Avatar/Welcoming>--
@@ -519,7 +577,7 @@ ChangeLog.Size = UDim2.new(0, 350, 0, 500)
 ChangeLog.BorderSizePixel = 2
 ChangeLog.BackgroundColor3 = White
 ChangeLog.BorderColor3 = Black
-ChangeLog.Text = "Ninelives "..Version.." \n Built 11.23.21 \n \n Major code optimization, added console, added HomeFrame, major debugging, added chat spammer fix for counter blox, added loading system with whitelists, esp is almost finished, made boxes way thicker, added change log, removed bananna knife due to detection, working on aimbot. Currently very buggy! Issues: Esp is very buggy (Mostly fixed now), do not change color/refresh esp/change opacity without enabling the feature you are changing first, if you have problems click refresh esp and go from there, chat spammer spams multiple times after reenabling, crosshair sometimes draws over menu when enabled for the first time. \n \n Credits: \n Jcat (Coder) \n All tetesters and mods! \n Anyone I pasted from (Skin changer and Mod weapon)"
+ChangeLog.Text = "Ninelives "..Version.." \n Built 11.28.21 \n \n Major code optimization, added console, added HomeFrame, major debugging, added chat spammer fix for counter blox, added loading system with whitelists, esp is almost finished, made boxes way thicker, added change log, removed bananna knife due to detection, working on aimbot. Currently very buggy! Issues: Esp is very buggy (Mostly fixed now), do not change color/refresh esp/change opacity without enabling the feature you are changing first, if you have problems click refresh esp and go from there, chat spammer spams multiple times after reenabling, crosshair sometimes draws over menu when enabled for the first time. \n \n Credits: \n Jcat (Coder) \n All tetesters and mods! \n Anyone I pasted from (Skin changer and Mod weapon)"
 ChangeLog.TextScaled = true
 ChangeLog.TextColor3 = Red
 ChangeLog.Active = true
@@ -593,8 +651,115 @@ AddUICheckBox(EspChamsToggle, "EspChamsToggle", Right, 0.4, "")
 AddUICheckBox(EspHealthBarToggle, "EspHealthBarToggle", Left, 0.6, "")
 AddUICheckBox(FovChangerToggle, "FovChangerToggle", Right, 0.6, "")
 AddUICheckBox(ConsoleToggle, "ConsoleToggle", Left, 0.8, "")
+AddUICheckBox(AimbotToggle, "AimbotToggle", Left, 0.2, "")
+AddUICheckBox(AimbotTeamCheckToggle, "AimbotTeamCheckToggle", Right, 0.2, "✓")
 
 --<Checkbox Functions>--
+AimbotToggle.MouseButton1Click:Connect(function()
+    AimbotEnabled = not AimbotEnabled
+    print(AimbotEnabled)
+
+    if AimbotEnabled then
+        AimbotToggle.Text = "✓"
+        _G.aimbot = true
+    else
+        AimbotToggle.Text = ""
+        _G.aimbot = false
+    end
+end)
+
+--<Aimbot>--
+local AimbotSettings = {
+    Aimbot = true,
+    Aiming = false,
+    AimbotSpeed = 0,
+    TeamCheck = true
+}
+
+UserInputService.InputBegan:Connect(function(Input)
+    if Input.KeyCode == AimbotKey then
+        AimbotSettings.Aiming = true
+    end
+end)
+
+UserInputService.InputEnded:Connect(function(Input)
+    if Input.KeyCode == AimbotKey then
+        AimbotSettings.Aiming = false
+    end
+end)
+
+game:GetService("RunService").RenderStepped:Connect(function()
+
+    local distance = math.huge
+    local target = nil
+
+    if AimbotSettings.Aiming then
+
+        for _,v in pairs (game:GetService("Players"):GetChildren()) do
+            if AimbotSettings.TeamCheck then
+                if v ~= Plr and v.Team ~= Plr.Team and v.Character and v.Character:FindFirstChild("Humanoid") then
+                    if v.Character:FindFirstChild("Humanoid").Health > 0 and v.Character:FindFirstChild("Head") then
+
+                        local plr = v.Character
+                        local plrhead, onscreen = game.Workspace.CurrentCamera:WorldToViewportPoint(plr.Head.Position)
+
+                        if onscreen then
+
+                            local magnitude = (Vector2.new(Plr:GetMouse().X, Plr:GetMouse().Y) - Vector2.new(plrhead.X, plrhead.Y)).magnitude
+
+                            if magnitude < distance then
+                                distance = magnitude
+                                target = plr
+                            end
+                        end
+                    end
+                end
+            else
+                if v ~= Plr and v.Character and v.Character:FindFirstChild("Humanoid") then
+                    if v.Character:FindFirstChild("Humanoid").Health > 0 and v.Character:FindFirstChild("Head") then
+
+                        local plr = v.Character
+                        local plrhead, onscreen = game.Workspace.CurrentCamera:WorldToViewportPoint(plr.Head.Position)
+
+                        if onscreen then
+
+                            local magnitude = (Vector2.new(Plr:GetMouse().X, Plr:GetMouse().Y) - Vector2.new(plrhead.X, plrhead.Y)).magnitude
+
+                            if magnitude < distance then
+                                distance = magnitude
+                                target = plr
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+        
+    if target ~= nil and target:FindFirstChild("Humanoid") and target:FindFirstChild("Head") then
+        if target:FindFirstChild("Humanoid").Health > 0 then
+
+            local Tween = game.TweenService:create(game.Workspace.CurrentCamera, TweenInfo.new(AimbotSettings.AimbotSpeed), {CFrame = CFrame.new(game.Workspace.CurrentCamera.CFrame.Position, target.Head.Position)})
+            Tween:Play()
+            UserInputService.InputEnded:Connect(function(Input)
+                if Input.KeyCode == Enum.KeyCode.E then
+                    Tween:Cancel() return end
+            end)
+        end
+    end
+end)
+--<End>--
+
+AimbotTeamCheckToggle.MouseButton1Click:Connect(function()
+    AimbotTeamCheck = not AimbotTeamCheck
+    AimbotSettings.TeamCheck = not AimbotSettings.TeamCheck
+
+    if AimbotTeamCheck then
+        AimbotTeamCheckToggle.Text = "✓"
+    else
+        AimbotTeamCheckToggle.Text = ""
+    end
+end)
 
 ConsoleToggle.MouseButton1Click:Connect(function()
     MainFrame.Visible = not MainFrame.Visible
@@ -680,9 +845,9 @@ EspNamesToggle.MouseButton1Click:Connect(function()
         EspNamesToggle.Text = ""
         for i,v in pairs (game:GetService("Players"):GetPlayers()) do
             if v ~= game:GetService("Players").LocalPlayer and v.Character ~= nil then
-                if v.Character:FindFirstChild("Head") ~= nil then
-                    if v.Character.Head:FindFirstChild("NameEsp") ~= nil then
-                        v.Character.Head.NameEsp:Destroy()
+                if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                    if v.Character.HumanoidRootPart:FindFirstChild("NameEsp") ~= nil then
+                        v.Character.HumanoidRootPart.NameEsp:Destroy()
                     end
                 end
             end
@@ -696,7 +861,7 @@ NameEspGui.Name = "NameEsp"
 NameEspGui.ResetOnSpawn = false
 NameEspGui.AlwaysOnTop = true
 NameEspGui.Size = UDim2.new(1, 0, 1, 0)
-NameEspGui.ExtentsOffset = Vector3.new(0, 2, 0)
+NameEspGui.ExtentsOffset = Vector3.new(0, 2.5, 0)
 
 NameEsp.BackgroundTransparency = 1
 NameEsp.Text = ""
@@ -712,23 +877,23 @@ game:GetService("RunService").RenderStepped:Connect(function()
     for i,v in pairs (game:GetService("Players"):GetPlayers()) do
         if TeamCheck == true then
             if v ~= game:GetService("Players").LocalPlayer and v.Character ~= nil and EspEnabled == true and v.TeamColor ~= game:GetService("Players").LocalPlayer.TeamColor then
-                if v.Character:FindFirstChild("Head") ~= nil then
-                    if v.Character.Head:FindFirstChild("NameEsp") == nil then
+                if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                    if v.Character.HumanoidRootPart:FindFirstChild("NameEsp") == nil then
                         NameEsp.Text = ""..v.Name..""
                         NameEsp.TextColor3 = NameEspColor
-                        NameEspGui.Adornee = v.Character.Head
-                        NameEspGui:Clone().Parent = v.Character.Head
+                        NameEspGui.Adornee = v.Character.HumanoidRootPart
+                        NameEspGui:Clone().Parent = v.Character.HumanoidRootPart
                     end
                 end
             end
         else
             if v ~= game:GetService("Players").LocalPlayer and v.Character ~= nil and EspEnabled == true then
-                if v.Character:FindFirstChild("Head") ~= nil then
-                    if v.Character.Head:FindFirstChild("NameEsp") == nil then
+                if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                    if v.Character.HumanoidRootPart:FindFirstChild("NameEsp") == nil then
                         NameEsp.Text = ""..v.Name..""
                         NameEsp.TextColor3 = NameEspColor
-                        NameEspGui.Adornee = v.Character.Head
-                        NameEspGui:Clone().Parent = v.Character.Head
+                        NameEspGui.Adornee = v.Character.HumanoidRootPart
+                        NameEspGui:Clone().Parent = v.Character.HumanoidRootPart
                     end
                 end
             end
@@ -757,7 +922,7 @@ EspBoxesToggle.MouseButton1Click:Connect(function()
         EspBoxesToggle.Text = ""
         for i,v in pairs (game:GetService("Players"):GetPlayers()) do
             if v ~= game:GetService("Players").LocalPlayer and v.Character ~= nil then
-                if v.Character:FindFirstChild("Head") ~= nil then
+                if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
                     if v.Character.HumanoidRootPart:FindFirstChild("BoxEsp") ~= nil then
                         v.Character.HumanoidRootPart.BoxEsp:Destroy()
                     end
@@ -775,7 +940,7 @@ BoxEspGui.AlwaysOnTop = true
 BoxEspGui.Size = UDim2.new(4, 0, 6, 0)
 
 BoxEsp.BackgroundTransparency = 1
-BoxEsp.Image = "http://www.roblox.com/asset/?id=8046960818"
+BoxEsp.Image = "http://www.roblox.com/asset/?id=8083895219"
 BoxEsp.AnchorPoint = Vector2.new(0.5, 0.5)
 BoxEsp.Size = UDim2.new(1, 0, 1, 0)
 BoxEsp.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -919,18 +1084,18 @@ function Update()
             if TeamCheck == true then
                 for _,v in pairs(game:GetService("Players"):GetChildren()) do
                     if v ~= game.Players.LocalPlayer and v.Character ~= nil and v.TeamColor ~= game:GetService("Players").LocalPlayer.TeamColor then
-                        if v.Character:FindFirstChild("Head") ~= nil then
-                            if v.Character.Head:FindFirstChild("HealthGui") == nil then
-                                HealthGui.Adornee = v.Character.Head
-                                HealthGui:Clone().Parent = v.Character.Head
+                        if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                            if v.Character.HumanoidRootPart:FindFirstChild("HealthGui") == nil then
+                                HealthGui.Adornee = v.Character.HumanoidRootPart
+                                HealthGui:Clone().Parent = v.Character.HumanoidRootPart
                             end
                         end
                     end
                     if v ~= game.Players.LocalPlayer and v.Character ~= nil and v.TeamColor ~= game:GetService("Players").LocalPlayer.TeamColor then
-                        if v.Character:FindFirstChild("Head") ~= nil then
-                            if v.Character.Head.HealthGui:FindFirstChild("Esp") then
+                        if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                            if v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp") then
                                 if v.Character:FindFirstChild("Humanoid") then
-                                    v.Character.Head.HealthGui:FindFirstChild("Esp").Text = "%"..math.floor(v.Character.Humanoid.Health)..""
+                                    v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp").Text = "%"..math.floor(v.Character.Humanoid.Health)..""
                                 end
                             end
                         end
@@ -939,18 +1104,18 @@ function Update()
             else
                 for _,v in pairs(game:GetService("Players"):GetChildren()) do
                     if v ~= game.Players.LocalPlayer and v.Character ~= nil then
-                        if v.Character:FindFirstChild("Head") ~= nil then
-                            if v.Character.Head:FindFirstChild("HealthGui") == nil then
-                                HealthGui.Adornee = v.Character.Head
-                                HealthGui:Clone().Parent = v.Character.Head
+                        if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                            if v.Character.HumanoidRootPart:FindFirstChild("HealthGui") == nil then
+                                HealthGui.Adornee = v.Character.HumanoidRootPart
+                                HealthGui:Clone().Parent = v.Character.HumanoidRootPart
                             end
                         end
                     end
                     if v ~= game.Players.LocalPlayer and v.Character ~= nil then
-                        if v.Character:FindFirstChild("Head") ~= nil then
-                            if v.Character.Head.HealthGui:FindFirstChild("Esp") then
+                        if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                            if v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp") then
                                 if v.Character:FindFirstChild("Humanoid") then
-                                    v.Character.Head.HealthGui:FindFirstChild("Esp").Text = "%"..math.floor(v.Character.Humanoid.Health)..""
+                                    v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp").Text = "%"..math.floor(v.Character.Humanoid.Health)..""
                                 end
                             end
                         end
@@ -961,9 +1126,9 @@ function Update()
             wait(0.5)
             for _,v in pairs(game:GetService("Players"):GetChildren()) do
                 if v.Character ~= nil then
-                    if v.Character:FindFirstChild("Head") ~= nil then
-                        if v.Character.Head:FindFirstChild("HealthGui") ~= nil then
-                            v.Character.Head.HealthGui:Destroy()
+                    if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                        if v.Character.HumanoidRootPart:FindFirstChild("HealthGui") ~= nil then
+                            v.Character.HumanoidRootPart.HealthGui:Destroy()
                         end
                     end
                 end
@@ -980,16 +1145,15 @@ FovChangerToggle.MouseButton1Click:Connect(function()
         UpdateFov()
     else
         FovChangerToggle.Text = ""
-        wait(0.3)
         game.Workspace.CurrentCamera.FieldOfView = 70
     end
 end)
 --<End>--
 
-function CreateTextBox(Variable, vName, vText)
+function CreateTextBox(Variable, vName, vText, PosX, PosY)
     Variable.Name = vName
     Variable.AnchorPoint = VectorCenter
-    Variable.Position = UDim2.new(0.5, 0, 2, 0)
+    Variable.Position = UDim2.new(PosX, 0, PosY, 0)
     Variable.Size = UDim2.new(0, 25, 0, 25)
     Variable.BorderColor3 = CurrentColor
     Variable.BackgroundColor3 = lBlack
@@ -998,8 +1162,10 @@ function CreateTextBox(Variable, vName, vText)
     Variable.TextColor3 = White
 end
 
-CreateTextBox(ChamsOpacityTextBox, "ChamsOpacityTextBox", 5)
-CreateTextBox(FovChangerTextBox, "FovChangerTextBox", 70)
+CreateTextBox(ChamsOpacityTextBox, "ChamsOpacityTextBox", 5, 0.5, 2)
+CreateTextBox(FovChangerTextBox, "FovChangerTextBox", 70, 0.5, 2)
+CreateTextBox(AimbotSmoothing, "AimbotSmoothing", 0, Left, 0.4)
+CreateTextBox(AimbotKeyTextBox, "AimbotKeyTextBox", "e", Right, 0.4)
 
 --<TextBox Functions>--
 i = 1
@@ -1026,6 +1192,82 @@ FovChangerTextBox.FocusLost:Connect(function()
     CustomFov = FovChangerTextBox.Text
     CreateNotification("Refreshing Fov Value...", 1.5)
     UpdateFov()
+end)
+
+AimbotSmoothing.FocusLost:Connect(function()
+    if AimbotSmoothing.Text == "0" then
+        AimbotSettings.AimbotSpeed = 0.01
+    elseif AimbotSmoothing.Text == "1" then
+        AimbotSettings.AimbotSpeed = 0.25
+    elseif AimbotSmoothing.Text == "2"  then
+        AimbotSettings.AimbotSpeed = 0.5
+    elseif AimbotSmoothing.Text == "3" then
+        AimbotSettings.AimbotSpeed = 0.75
+    elseif AimbotSmoothing.Text == "4" then
+        AimbotSettings.AimbotSpeed = 1
+    elseif AimbotSmoothing.Text == "5" then
+        AimbotSettings.AimbotSpeed = 1.25
+    else
+        CreateNotification("Value must be 0-5", 5)
+    end
+end)
+
+AimbotKeyTextBox.FocusLost:Connect(function()
+    if AimbotKeyTextBox.Text == "a" then
+        AimbotKey = Enum.KeyCode.A
+    elseif AimbotKeyTextBox.Text == "b" then
+        AimbotKey = Enum.KeyCode.B
+    elseif AimbotKeyTextBox.Text == "c" then
+        AimbotKey = Enum.KeyCode.C
+    elseif AimbotKeyTextBox.Text == "d" then
+        AimbotKey = Enum.KeyCode.D
+    elseif AimbotKeyTextBox.Text == "e" then
+        AimbotKey = Enum.KeyCode.E
+    elseif AimbotKeyTextBox.Text == "f" then
+        AimbotKey = Enum.KeyCode.F
+    elseif AimbotKeyTextBox.Text == "g" then
+        AimbotKey = Enum.KeyCode.G
+    elseif AimbotKeyTextBox.Text == "h" then
+        AimbotKey = Enum.KeyCode.H
+    elseif AimbotKeyTextBox.Text == "i" then
+        AimbotKey = Enum.KeyCode.I
+    elseif AimbotKeyTextBox.Text == "j" then
+        AimbotKey = Enum.KeyCode.J
+    elseif AimbotKeyTextBox.Text == "k" then
+        AimbotKey = Enum.KeyCode.K
+    elseif AimbotKeyTextBox.Text == "l" then
+        AimbotKey = Enum.KeyCode.L
+    elseif AimbotKeyTextBox.Text == "m" then
+        AimbotKey = Enum.KeyCode.M
+    elseif AimbotKeyTextBox.Text == "n" then
+        AimbotKey = Enum.KeyCode.N
+    elseif AimbotKeyTextBox.Text == "o" then
+        AimbotKey = Enum.KeyCode.O
+    elseif AimbotKeyTextBox.Text == "p" then
+        AimbotKey = Enum.KeyCode.P
+    elseif AimbotKeyTextBox.Text == "q" then
+        AimbotKey = Enum.KeyCode.Q
+    elseif AimbotKeyTextBox.Text == "r" then
+        AimbotKey = Enum.KeyCode.R
+    elseif AimbotKeyTextBox.Text == "s" then
+        AimbotKey = Enum.KeyCode.S
+    elseif AimbotKeyTextBox.Text == "t" then
+        AimbotKey = Enum.KeyCode.T
+    elseif AimbotKeyTextBox.Text == "u" then
+        AimbotKey = Enum.KeyCode.U
+    elseif AimbotKeyTextBox.Text == "v" then
+        AimbotKey = Enum.KeyCode.V
+    elseif AimbotKeyTextBox.Text == "w" then
+        AimbotKey = Enum.KeyCode.W
+    elseif AimbotKeyTextBox.Text == "x" then
+        AimbotKey = Enum.KeyCode.X
+    elseif AimbotKeyTextBox.Text == "y" then
+        AimbotKey = Enum.KeyCode.Y
+    elseif AimbotKeyTextBox.Text == "z" then
+        AimbotKey = Enum.KeyCode.Z
+    else
+        CreateNotification("Value must be letter", 5)
+    end
 end)
 --<End>--
 
@@ -1055,6 +1297,10 @@ CreateLabel(ChamsOpacityLabel, "ChamsOpacityLabel", "Opacity 1-5")
 CreateLabel(FovTextBoxLabel, "FovTextBoxLabel", "Fov 1-120")
 CreateLabel(FovChangerLabel, "FovChangerLabel", "Fov Changer")
 CreateLabel(ConsoleToggleLabel, "ConsoleToggleLabel", "Console")
+CreateLabel(AimbotToggleLabel, "AimbotToggleLabel", "Aimbot")
+CreateLabel(AimbotTeamCheckLabel, "AimbotTeamCheckLabel", "Team Check")
+CreateLabel(AimbotSmoothingLabel, "AimbotSmoothingLabel", "Smoothing 0-5")
+CreateLabel(AimbotKeyLabel, "AimbotKeyLabel", "Aimbot Key")
 
 function AddUIButton(Variable, vName, PosX, PosY, vText)
     Variable.Name = vName
@@ -1078,7 +1324,7 @@ AddUIButton(CrosshairColorDrop, "CrosshairColorDrop", 0.8, 0.2, "Crosshair")
 AddUIButton(NameEspColorDrop, "NameEspColorDrop", 0.8, 0.4, "Names")
 AddUIButton(BoxEspColorDrop, "BoxEspColorDrop", 0.2, 0.6, "Boxes")
 AddUIButton(ChamsEspColorDrop, "ChamsEspColorDrop", 0.8, 0.6, "Chams")
-AddUIButton(TempButton, "TempButton", 0.2, 0.2, "Fps Gui")
+AddUIButton(RemoveRecoilButton, "RemoveRecoilButton", 0.2, 0.6, "Remove Recoil")
 
 function CreateScroll(Variable, vName, vSize)
     Variable.Name = vName
@@ -1100,9 +1346,10 @@ CreateScroll(BoxEspScroll, "BoxEspScroll", 7)
 CreateScroll(ChamsEspScroll, "ChamsEspScroll", 10)
 
 --<Button Functions>--
+RemoveRecoilButton.MouseButton1Click:Connect(function()
+    local env = getsenv(game:service('Players').LocalPlayer.PlayerGui.Client)
 
-TempButton.MouseButton1Click:Connect(function()
-    loadstring(game:HttpGet("https://pastebin.com/raw/cHKVsTg8", true))()
+    env.KickBack = function() end
 end)
 
 SkinChangerButton.MouseButton1Click:Connect(function()
@@ -1415,6 +1662,7 @@ function CreateTabButton(Variable, vName, Index, vText)
     Variable.Text = vText
     Variable.TextColor3 = lGrey
     Variable.TextSize = 15
+    Variable.Modal = true
 end
 
 CreateTabButton(LegitTabButton, "LegitTabButton", 0.25, "Legit")
@@ -1645,6 +1893,13 @@ function ColorUpdate2()
     FovChangerToggle.TextColor3 = CurrentColor
     ConsoleToggle.BorderColor3 = CurrentColor
     ConsoleToggle.TextColor3 = CurrentColor
+    AimbotToggle.BorderColor3 = CurrentColor
+    AimbotToggle.TextColor3 = CurrentColor
+    AimbotTeamCheckToggle.BorderColor3 = CurrentColor
+    AimbotTeamCheckToggle.TextColor3 = CurrentColor
+    AimbotSmoothing.BorderColor3 = CurrentColor
+    AimbotKeyTextBox.BorderColor3 = CurrentColor
+    RemoveRecoilButton.BorderColor3 = CurrentColor
 end
 
 function LightModeUpdate()
@@ -1728,6 +1983,11 @@ function LightModeUpdate2()
     FovChangerToggle.BackgroundColor3 = CurrentMode
     FovChangerTextBox.BackgroundColor3 = CurrentMode
     ConsoleToggle.BackgroundColor3 = CurrentMode
+    AimbotToggle.BackgroundColor3 = CurrentMode
+    AimbotTeamCheckToggle.BackgroundColor3 = CurrentMode
+    AimbotSmoothing.BackgroundColor3 = CurrentMode
+    AimbotKeyTextBox.BackgroundColor3 = CurrentMode
+    RemoveRecoilButton.BackgroundColor3 = CurrentMode
 end
 
 function TextColorUpdate()
@@ -1803,6 +2063,13 @@ function TextColorUpdate2()
     FovTextBoxLabel.TextColor3 = CurrentText
     FovChangerTextBox.TextColor3 = CurrentText
     ConsoleToggleLabel.TextColor3 = CurrentText
+    AimbotToggleLabel.TextColor3 = CurrentText
+    AimbotTeamCheckLabel.TextColor3 = CurrentText
+    AimbotSmoothingLabel.TextColor3 = CurrentText
+    AimbotKeyLabel.TextColor3 = CurrentText
+    RemoveRecoilButton.TextColor3 = CurrentText
+    AimbotSmoothing.TextColor3 = CurrentText
+    AimbotKeyTextBox.TextColor3 = CurrentText
 end
 
 function CrosshairUpdate()
@@ -1824,9 +2091,9 @@ function RefreshHealthEsp()
 
     for i,v in pairs (game:GetService("Players"):GetPlayers()) do
         if v ~= game:GetService("Players").LocalPlayer and v.Character ~= nil then
-            if v.Character:FindFirstChild("Head") ~= nil then
-                if v.Character.Head:FindFirstChild("HealthGui") ~= nil then
-                    v.Character.Head.HealthGui:Destroy()
+            if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                if v.Character.HumanoidRootPart:FindFirstChild("HealthGui") ~= nil then
+                    v.Character.HumanoidRootPart.HealthGui:Destroy()
                 end
             end
         end
@@ -1851,9 +2118,9 @@ function RefreshNameEsp()
 
     for i,v in pairs (game:GetService("Players"):GetPlayers()) do
         if v ~= game:GetService("Players").LocalPlayer and v.Character ~= nil then
-            if v.Character:FindFirstChild("Head") ~= nil then
-                if v.Character.Head:FindFirstChild("NameEsp") ~= nil then
-                    v.Character.Head.NameEsp:Destroy()
+            if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                if v.Character.HumanoidRootPart:FindFirstChild("NameEsp") ~= nil then
+                    v.Character.HumanoidRootPart.NameEsp:Destroy()
                 end
             end
         end
