@@ -694,58 +694,59 @@ game:GetService("RunService").RenderStepped:Connect(function()
     local distance = math.huge
     local target = nil
 
-    if AimbotSettings.Aiming then
+        if AimbotEnabled then
+        if AimbotSettings.Aiming then
+            for _,v in pairs (game:GetService("Players"):GetChildren()) do
+                if AimbotSettings.TeamCheck then
+                    if v ~= Plr and v.Team ~= Plr.Team and v.Character and v.Character:FindFirstChild("Humanoid") then
+                        if v.Character:FindFirstChild("Humanoid").Health > 0 and v.Character:FindFirstChild("Head") then
 
-        for _,v in pairs (game:GetService("Players"):GetChildren()) do
-            if AimbotSettings.TeamCheck then
-                if v ~= Plr and v.Team ~= Plr.Team and v.Character and v.Character:FindFirstChild("Humanoid") then
-                    if v.Character:FindFirstChild("Humanoid").Health > 0 and v.Character:FindFirstChild("Head") then
+                            local plr = v.Character
+                            local plrhead, onscreen = game.Workspace.CurrentCamera:WorldToViewportPoint(plr.Head.Position)
 
-                        local plr = v.Character
-                        local plrhead, onscreen = game.Workspace.CurrentCamera:WorldToViewportPoint(plr.Head.Position)
+                            if onscreen then
 
-                        if onscreen then
+                                local magnitude = (Vector2.new(Plr:GetMouse().X, Plr:GetMouse().Y) - Vector2.new(plrhead.X, plrhead.Y)).magnitude
 
-                            local magnitude = (Vector2.new(Plr:GetMouse().X, Plr:GetMouse().Y) - Vector2.new(plrhead.X, plrhead.Y)).magnitude
-
-                            if magnitude < distance then
-                                distance = magnitude
-                                target = plr
+                                if magnitude < distance then
+                                    distance = magnitude
+                                    target = plr
+                                end
                             end
                         end
                     end
-                end
-            else
-                if v ~= Plr and v.Character and v.Character:FindFirstChild("Humanoid") then
-                    if v.Character:FindFirstChild("Humanoid").Health > 0 and v.Character:FindFirstChild("Head") then
+                else
+                    if v ~= Plr and v.Character and v.Character:FindFirstChild("Humanoid") then
+                        if v.Character:FindFirstChild("Humanoid").Health > 0 and v.Character:FindFirstChild("Head") then
 
-                        local plr = v.Character
-                        local plrhead, onscreen = game.Workspace.CurrentCamera:WorldToViewportPoint(plr.Head.Position)
+                            local plr = v.Character
+                            local plrhead, onscreen = game.Workspace.CurrentCamera:WorldToViewportPoint(plr.Head.Position)
 
-                        if onscreen then
+                            if onscreen then
 
-                            local magnitude = (Vector2.new(Plr:GetMouse().X, Plr:GetMouse().Y) - Vector2.new(plrhead.X, plrhead.Y)).magnitude
+                                local magnitude = (Vector2.new(Plr:GetMouse().X, Plr:GetMouse().Y) - Vector2.new(plrhead.X, plrhead.Y)).magnitude
 
-                            if magnitude < distance then
-                                distance = magnitude
-                                target = plr
+                                if magnitude < distance then
+                                    distance = magnitude
+                                    target = plr
+                                end
                             end
                         end
                     end
                 end
             end
         end
-    end
-        
-    if target ~= nil and target:FindFirstChild("Humanoid") and target:FindFirstChild("Head") then
-        if target:FindFirstChild("Humanoid").Health > 0 then
+            
+        if target ~= nil and target:FindFirstChild("Humanoid") and target:FindFirstChild("Head") then
+            if target:FindFirstChild("Humanoid").Health > 0 then
 
-            local Tween = game.TweenService:create(game.Workspace.CurrentCamera, TweenInfo.new(AimbotSettings.AimbotSpeed), {CFrame = CFrame.new(game.Workspace.CurrentCamera.CFrame.Position, target.Head.Position)})
-            Tween:Play()
-            UserInputService.InputEnded:Connect(function(Input)
-                if Input.KeyCode == Enum.KeyCode.E then
-                    Tween:Cancel() return end
-            end)
+                local Tween = game.TweenService:create(game.Workspace.CurrentCamera, TweenInfo.new(AimbotSettings.AimbotSpeed), {CFrame = CFrame.new(game.Workspace.CurrentCamera.CFrame.Position, target.Head.Position)})
+                Tween:Play()
+                UserInputService.InputEnded:Connect(function(Input)
+                    if Input.KeyCode == Enum.KeyCode.E then
+                        Tween:Cancel() return end
+                end)
+            end
         end
     end
 end)
@@ -1533,7 +1534,7 @@ NameEspRed.MouseButton1Click:Connect(function()
     RefreshNameEsp()
 end)
 NameEspGreen.MouseButton1Click:Connect(function()
-    NameEspColor = TrueGreen
+    NameEspColor = Green
     wait(0.5)
     RefreshNameEsp()
 end)
@@ -1569,7 +1570,7 @@ BoxEspRed.MouseButton1Click:Connect(function()
     RefreshBoxEsp()
 end)
 BoxEspGreen.MouseButton1Click:Connect(function()
-    BoxEspColor = TrueGreen
+    BoxEspColor = Green
     wait(0.5)
     RefreshBoxEsp()
 end)
@@ -1605,7 +1606,7 @@ ChamsRed.MouseButton1Click:Connect(function()
     UpdateChams()
 end)
 ChamsGreen.MouseButton1Click:Connect(function()
-    ChamsColor = Green
+    ChamsColor = TrueGreen
     wait(0.5)
     UpdateChams()
 end)
