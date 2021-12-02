@@ -6,7 +6,7 @@ Sound.PlayOnRemove = true
 Sound:Destroy()
 ---<End>---
 
-local Version = "v1.9.5"
+local Version = "v1.9.6"
 
 function CreateNotification(vText, vDuration, vButton)
     game:GetService("StarterGui"):SetCore("SendNotification", {
@@ -673,6 +673,7 @@ local AimbotSettings = {
     Aimbot = true,
     Aiming = false,
     AimbotSpeed = 0,
+    AimBone = "Head",
     TeamCheck = true
 }
 
@@ -693,58 +694,59 @@ game:GetService("RunService").RenderStepped:Connect(function()
     local distance = math.huge
     local target = nil
 
-    if AimbotSettings.Aiming then
+        if AimbotEnabled then
+        if AimbotSettings.Aiming then
+            for _,v in pairs (game:GetService("Players"):GetChildren()) do
+                if AimbotSettings.TeamCheck then
+                    if v ~= Plr and v.Team ~= Plr.Team and v.Character and v.Character:FindFirstChild("Humanoid") then
+                        if v.Character:FindFirstChild("Humanoid").Health > 0 and v.Character:FindFirstChild("Head") then
 
-        for _,v in pairs (game:GetService("Players"):GetChildren()) do
-            if AimbotSettings.TeamCheck then
-                if v ~= Plr and v.Team ~= Plr.Team and v.Character and v.Character:FindFirstChild("Humanoid") then
-                    if v.Character:FindFirstChild("Humanoid").Health > 0 and v.Character:FindFirstChild("Head") then
+                            local plr = v.Character
+                            local plrhead, onscreen = game.Workspace.CurrentCamera:WorldToViewportPoint(plr.Head.Position)
 
-                        local plr = v.Character
-                        local plrhead, onscreen = game.Workspace.CurrentCamera:WorldToViewportPoint(plr.Head.Position)
+                            if onscreen then
 
-                        if onscreen then
+                                local magnitude = (Vector2.new(Plr:GetMouse().X, Plr:GetMouse().Y) - Vector2.new(plrhead.X, plrhead.Y)).magnitude
 
-                            local magnitude = (Vector2.new(Plr:GetMouse().X, Plr:GetMouse().Y) - Vector2.new(plrhead.X, plrhead.Y)).magnitude
-
-                            if magnitude < distance then
-                                distance = magnitude
-                                target = plr
+                                if magnitude < distance then
+                                    distance = magnitude
+                                    target = plr
+                                end
                             end
                         end
                     end
-                end
-            else
-                if v ~= Plr and v.Character and v.Character:FindFirstChild("Humanoid") then
-                    if v.Character:FindFirstChild("Humanoid").Health > 0 and v.Character:FindFirstChild("Head") then
+                else
+                    if v ~= Plr and v.Character and v.Character:FindFirstChild("Humanoid") then
+                        if v.Character:FindFirstChild("Humanoid").Health > 0 and v.Character:FindFirstChild("Head") then
 
-                        local plr = v.Character
-                        local plrhead, onscreen = game.Workspace.CurrentCamera:WorldToViewportPoint(plr.Head.Position)
+                            local plr = v.Character
+                            local plrhead, onscreen = game.Workspace.CurrentCamera:WorldToViewportPoint(plr.Head.Position)
 
-                        if onscreen then
+                            if onscreen then
 
-                            local magnitude = (Vector2.new(Plr:GetMouse().X, Plr:GetMouse().Y) - Vector2.new(plrhead.X, plrhead.Y)).magnitude
+                                local magnitude = (Vector2.new(Plr:GetMouse().X, Plr:GetMouse().Y) - Vector2.new(plrhead.X, plrhead.Y)).magnitude
 
-                            if magnitude < distance then
-                                distance = magnitude
-                                target = plr
+                                if magnitude < distance then
+                                    distance = magnitude
+                                    target = plr
+                                end
                             end
                         end
                     end
                 end
             end
         end
-    end
-        
-    if target ~= nil and target:FindFirstChild("Humanoid") and target:FindFirstChild("Head") then
-        if target:FindFirstChild("Humanoid").Health > 0 then
+            
+        if target ~= nil and target:FindFirstChild("Humanoid") and target:FindFirstChild("Head") then
+            if target:FindFirstChild("Humanoid").Health > 0 then
 
-            local Tween = game.TweenService:create(game.Workspace.CurrentCamera, TweenInfo.new(AimbotSettings.AimbotSpeed), {CFrame = CFrame.new(game.Workspace.CurrentCamera.CFrame.Position, target.Head.Position)})
-            Tween:Play()
-            UserInputService.InputEnded:Connect(function(Input)
-                if Input.KeyCode == Enum.KeyCode.E then
-                    Tween:Cancel() return end
-            end)
+                local Tween = game.TweenService:create(game.Workspace.CurrentCamera, TweenInfo.new(AimbotSettings.AimbotSpeed), {CFrame = CFrame.new(game.Workspace.CurrentCamera.CFrame.Position, target.Head.Position)})
+                Tween:Play()
+                UserInputService.InputEnded:Connect(function(Input)
+                    if Input.KeyCode == Enum.KeyCode.E then
+                        Tween:Cancel() return end
+                end)
+            end
         end
     end
 end)
@@ -1125,13 +1127,13 @@ function Update()
                             if v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp") then
                                 if v.Character:FindFirstChild("Humanoid") then
                                     v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp").Text = "%"..math.floor(v.Character.Humanoid.Health)..""
-                                    if v.Character.Humanoid.Health > 74 then
+                                    if v.Character.Humanoid.Health >= 75 then
                                         v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp").TextColor3 = Green
-                                    elseif v.Character.Humanoid.Health > 49 then
+                                    elseif v.Character.Humanoid.Health >= 50 then
                                         v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp").TextColor3 = Yellow
-                                    elseif v.Character.Humanoid.Health > 24 then
+                                    elseif v.Character.Humanoid.Health >= 25 then
                                         v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp").TextColor3 = Orange
-                                    elseif v.Character.Humanoid.Health > 0 then
+                                    elseif v.Character.Humanoid.Health >= 0 then
                                         v.Character.HumanoidRootPart.HealthGui:FindFirstChild("Esp").TextColor3 = Red
                                     end
                                 end
@@ -1532,7 +1534,7 @@ NameEspRed.MouseButton1Click:Connect(function()
     RefreshNameEsp()
 end)
 NameEspGreen.MouseButton1Click:Connect(function()
-    NameEspColor = TrueGreen
+    NameEspColor = Green
     wait(0.5)
     RefreshNameEsp()
 end)
@@ -1568,7 +1570,7 @@ BoxEspRed.MouseButton1Click:Connect(function()
     RefreshBoxEsp()
 end)
 BoxEspGreen.MouseButton1Click:Connect(function()
-    BoxEspColor = TrueGreen
+    BoxEspColor = Green
     wait(0.5)
     RefreshBoxEsp()
 end)
@@ -1604,7 +1606,7 @@ ChamsRed.MouseButton1Click:Connect(function()
     UpdateChams()
 end)
 ChamsGreen.MouseButton1Click:Connect(function()
-    ChamsColor = Green
+    ChamsColor = TrueGreen
     wait(0.5)
     UpdateChams()
 end)
@@ -2214,7 +2216,7 @@ end
 
 function ChatSpamFunction()
     while ChatSpam do
-        if game.PlaceId == 301549746 then
+        if game.PlaceId == 301549746 or 286090429 then
             game:GetService("ReplicatedStorage").Events.PlayerChatted:FireServer(ChatTable[math.random(1,#ChatTable)], false, "Innocent", false, true)
             wait(3)
         else
