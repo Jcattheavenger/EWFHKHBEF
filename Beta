@@ -6,7 +6,7 @@ Sound.PlayOnRemove = true
 Sound:Destroy()
 ---<End>---
 
-local Version = "v1.9.6"
+local Version = "v1.9.8"
 
 function CreateNotification(vText, vDuration, vButton)
     game:GetService("StarterGui"):SetCore("SendNotification", {
@@ -86,6 +86,10 @@ local AimbotSmoothing = Instance.new("TextBox",LegitTab)
 local AimbotSmoothingLabel = Instance.new("TextLabel",AimbotSmoothing)
 local AimbotKeyTextBox = Instance.new("TextBox",LegitTab)
 local AimbotKeyLabel = Instance.new("TextLabel",AimbotKeyTextBox)
+
+local AimbotBone = Instance.new("ImageLabel",LegitTab)
+local HeadBone = Instance.new("ImageButton",AimbotBone)
+local ChestBone = Instance.new("ImageButton", AimbotBone)
 
 local ChangeLog = Instance.new("TextLabel",Menu)
 local ChangeLogButton = Instance.new("TextButton",HomeFrame)
@@ -577,7 +581,7 @@ ChangeLog.Size = UDim2.new(0, 350, 0, 500)
 ChangeLog.BorderSizePixel = 2
 ChangeLog.BackgroundColor3 = White
 ChangeLog.BorderColor3 = Black
-ChangeLog.Text = "Ninelives "..Version.." \n Built 11.28.21 \n \n Major code optimization, added console, added HomeFrame, major debugging, added chat spammer fix for counter blox, added loading system with whitelists, esp is almost finished, made boxes way thicker, added change log, removed bananna knife due to detection, working on aimbot. Currently very buggy! Issues: Esp is very buggy (Mostly fixed now), do not change color/refresh esp/change opacity without enabling the feature you are changing first, if you have problems click refresh esp and go from there, chat spammer spams multiple times after reenabling, crosshair sometimes draws over menu when enabled for the first time. \n \n Credits: \n Jcat (Coder) \n All tetesters and mods! \n Anyone I pasted from (Skin changer and Mod weapon)"
+ChangeLog.Text = "Ninelives "..Version.." \n Built 12.1.21 \n \n Major code optimization, added console, added HomeFrame, major debugging, added chat spammer fix for counter blox, added loading system with whitelists, esp is almost finished, made boxes way thicker, added change log, removed bananna knife due to detection, working on aimbot. Currently very buggy! Issues: Esp is very buggy (Mostly fixed now), do not change color/refresh esp/change opacity without enabling the feature you are changing first, if you have problems click refresh esp and go from there, chat spammer spams multiple times after reenabling, crosshair sometimes draws over menu when enabled for the first time. \n \n Credits: \n Jcat (Coder) \n All tetesters and mods! \n Anyone I pasted from (Skin changer and Mod weapon)"
 ChangeLog.TextScaled = true
 ChangeLog.TextColor3 = Red
 ChangeLog.Active = true
@@ -702,7 +706,7 @@ game:GetService("RunService").RenderStepped:Connect(function()
                         if v.Character:FindFirstChild("Humanoid").Health > 0 and v.Character:FindFirstChild("Head") then
 
                             local plr = v.Character
-                            local plrhead, onscreen = game.Workspace.CurrentCamera:WorldToViewportPoint(plr.Head.Position)
+                            local plrhead, onscreen = game.Workspace.CurrentCamera:WorldToViewportPoint(plr[ActiveBone].Position)
 
                             if onscreen then
 
@@ -736,11 +740,11 @@ game:GetService("RunService").RenderStepped:Connect(function()
                 end
             end
         end
-            
+
         if target ~= nil and target:FindFirstChild("Humanoid") and target:FindFirstChild("Head") then
             if target:FindFirstChild("Humanoid").Health > 0 then
 
-                local Tween = game.TweenService:create(game.Workspace.CurrentCamera, TweenInfo.new(AimbotSettings.AimbotSpeed), {CFrame = CFrame.new(game.Workspace.CurrentCamera.CFrame.Position, target.Head.Position)})
+                local Tween = game.TweenService:create(game.Workspace.CurrentCamera, TweenInfo.new(AimbotSettings.AimbotSpeed), {CFrame = CFrame.new(game.Workspace.CurrentCamera.CFrame.Position, target[ActiveBone].Position)})
                 Tween:Play()
                 UserInputService.InputEnded:Connect(function(Input)
                     if Input.KeyCode == Enum.KeyCode.E then
@@ -1169,6 +1173,41 @@ FovChangerToggle.MouseButton1Click:Connect(function()
     end
 end)
 --<End>--
+
+ActiveBone = "Head"
+
+AimbotBone.Name = "AimbotBone"
+AimbotBone.AnchorPoint = VectorCenter
+AimbotBone.Position = UDim2.new(0.5, 0, 0.8, 0)
+AimbotBone.Size = UDim2.new(0, 175, 0, 175)
+AimbotBone.BackgroundTransparency = 1
+AimbotBone.Image = "http://www.roblox.com/asset/?id=8153734240"
+
+HeadBone.Name = "HeadBone"
+HeadBone.AnchorPoint = VectorCenter
+HeadBone.Position = UDim2.new(0.5, 0, 0.24, 0)
+HeadBone.Size = UDim2.new(0, 10, 0, 10)
+HeadBone.BackgroundTransparency = 1
+HeadBone.Image = "http://www.roblox.com/asset/?id=8153792195"
+HeadBone.ImageColor3 = Red
+HeadBone.MouseButton1Click:Connect(function()
+    ActiveBone = "Head"
+    HeadBone.ImageColor3 = Red
+    ChestBone.ImageColor3 = White
+end)
+
+ChestBone.Name = "ChestBone"
+ChestBone.AnchorPoint = VectorCenter
+ChestBone.Position = UDim2.new(0.5, 0, 0.45, 0)
+ChestBone.Size = UDim2.new(0, 10, 0, 10)
+ChestBone.BackgroundTransparency = 1
+ChestBone.Image = "http://www.roblox.com/asset/?id=8153792195"
+ChestBone.ImageColor3 = White
+ChestBone.MouseButton1Click:Connect(function()
+    ActiveBone = "HumanoidRootPart"
+    HeadBone.ImageColor3 = White
+    ChestBone.ImageColor3 = Red
+end)
 
 function CreateTextBox(Variable, vName, vText, PosX, PosY)
     Variable.Name = vName
@@ -2216,7 +2255,10 @@ end
 
 function ChatSpamFunction()
     while ChatSpam do
-        if game.PlaceId == 301549746 or 286090429 then
+        if game.PlaceId == 301549746 then
+            game:GetService("ReplicatedStorage").Events.PlayerChatted:FireServer(ChatTable[math.random(1,#ChatTable)], false, "Innocent", false, true)
+            wait(3)
+        elseif game.PlaceId == 286090429 then
             game:GetService("ReplicatedStorage").Events.PlayerChatted:FireServer(ChatTable[math.random(1,#ChatTable)], false, "Innocent", false, true)
             wait(3)
         else
