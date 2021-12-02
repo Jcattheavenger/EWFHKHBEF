@@ -673,6 +673,7 @@ local AimbotSettings = {
     Aimbot = true,
     Aiming = false,
     AimbotSpeed = 0,
+    AimBone = "Head",
     TeamCheck = true
 }
 
@@ -2214,7 +2215,7 @@ end
 
 function ChatSpamFunction()
     while ChatSpam do
-        if game.PlaceId == 301549746 then
+        if game.PlaceId == 301549746 or 286090429 then
             game:GetService("ReplicatedStorage").Events.PlayerChatted:FireServer(ChatTable[math.random(1,#ChatTable)], false, "Innocent", false, true)
             wait(3)
         else
