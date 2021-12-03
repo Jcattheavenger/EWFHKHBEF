@@ -6,7 +6,7 @@ Sound.PlayOnRemove = true
 Sound:Destroy()
 ---<End>---
 
-local Version = "v1.9.8"
+local Version = "v2.0.0"
 
 function CreateNotification(vText, vDuration, vButton)
     game:GetService("StarterGui"):SetCore("SendNotification", {
@@ -89,7 +89,19 @@ local AimbotKeyLabel = Instance.new("TextLabel",AimbotKeyTextBox)
 
 local AimbotBone = Instance.new("ImageLabel",LegitTab)
 local HeadBone = Instance.new("ImageButton",AimbotBone)
-local ChestBone = Instance.new("ImageButton", AimbotBone)
+local ChestBone = Instance.new("ImageButton",AimbotBone)
+
+local ThirdPersonToggle = Instance.new("TextButton",RageTab)
+local ThirdPersonToggleLabel = Instance.new("TextLabel",ThirdPersonToggle)
+local ThirdPersonDistanceTextBox = Instance.new("TextBox",ThirdPersonToggle)
+local ThirdPersonDistanceLabel = Instance.new("TextLabel",ThirdPersonDistanceTextBox)
+
+local AntiAimToggle = Instance.new("TextButton",RageTab)
+local AntiAimLabel = Instance.new("TextLabel",AntiAimToggle)
+local AntiAimMaxText = Instance.new("TextBox",AntiAimToggle)
+local AAMALabel = Instance.new("TextLabel",AntiAimMaxText)
+local AntiAimMinText = Instance.new("TextBox",AntiAimMaxText)
+local AAMILabel = Instance.new("TextLabel",AntiAimMinText)
 
 local ChangeLog = Instance.new("TextLabel",Menu)
 local ChangeLogButton = Instance.new("TextButton",HomeFrame)
@@ -219,21 +231,22 @@ local Right = 0.6
 local Plr = game.Players.LocalPlayer
 local UserInputService = game:GetService("UserInputService")
 
-local Black = Color3.fromRGB(0, 0, 0)
-local White = Color3.fromRGB(255, 255, 255)
-local Red = Color3.fromRGB(255, 0, 0)
-local Green = Color3.fromRGB(0, 175, 0)
-local Blue = Color3.fromRGB(0, 0, 255)
-local Cyan = Color3.fromRGB(0, 255, 255)
-local Yellow = Color3.fromRGB(255, 255, 0)
-local Pink = Color3.fromRGB(255, 0, 255)
-local TrueGreen = Color3.fromRGB(0, 255 ,0)
-local Purple = Color3.fromRGB(125, 0, 125)
-local Orange = Color3.fromRGB(255, 165, 0)
-local lBlack = Color3.fromRGB(25, 25, 25)
-local dWhite = Color3.fromRGB(230, 230, 230)
-local lGrey = Color3.fromRGB(150, 150, 150)
-local Shadow = Color3.fromRGB(46, 26, 71)
+Black = Color3.fromRGB(0, 0, 0)
+White = Color3.fromRGB(255, 255, 255)
+Red = Color3.fromRGB(255, 0, 0)
+Green = Color3.fromRGB(0, 175, 0)
+Blue = Color3.fromRGB(0, 0, 255)
+Cyan = Color3.fromRGB(0, 255, 255)
+Yellow = Color3.fromRGB(255, 255, 0)
+Pink = Color3.fromRGB(255, 0, 255)
+TrueGreen = Color3.fromRGB(0, 255 ,0)
+Purple = Color3.fromRGB(125, 0, 125)
+Orange = Color3.fromRGB(255, 165, 0)
+lBlack = Color3.fromRGB(25, 25, 25)
+dWhite = Color3.fromRGB(230, 230, 230)
+lGrey = Color3.fromRGB(150, 150, 150)
+Shadow = Color3.fromRGB(46, 26, 71)
+
 local CurrentColor = Pink
 local CurrentMode = lBlack
 local CurrentText = White
@@ -260,6 +273,11 @@ local AimbotKey = Enum.KeyCode.E
 local TeamCheck = true
 local CustomFovEnabled = false
 local CustomFov = 70
+local ThirdPerson = false
+local ThirdPersonDistance = 10
+local AntiAim = false
+local AAMaxAngle = 360
+local AAMinAngle = -360
 
 local NameIndex = 1
 local PosIndex = 0.02
@@ -581,7 +599,7 @@ ChangeLog.Size = UDim2.new(0, 350, 0, 500)
 ChangeLog.BorderSizePixel = 2
 ChangeLog.BackgroundColor3 = White
 ChangeLog.BorderColor3 = Black
-ChangeLog.Text = "Ninelives "..Version.." \n Built 12.1.21 \n \n Major code optimization, added console, added HomeFrame, major debugging, added chat spammer fix for counter blox, added loading system with whitelists, esp is almost finished, made boxes way thicker, added change log, removed bananna knife due to detection, working on aimbot. Currently very buggy! Issues: Esp is very buggy (Mostly fixed now), do not change color/refresh esp/change opacity without enabling the feature you are changing first, if you have problems click refresh esp and go from there, chat spammer spams multiple times after reenabling, crosshair sometimes draws over menu when enabled for the first time. \n \n Credits: \n Jcat (Coder) \n All tetesters and mods! \n Anyone I pasted from (Skin changer and Mod weapon)"
+ChangeLog.Text = "Ninelives "..Version.." \n Built 12.2.21 \n \n Major code optimization, added console, added HomeFrame, major debugging, added chat spammer fix for counter blox, added loading system with whitelists, esp is almost finished, made boxes way thicker, added change log, removed bananna knife due to detection, working on aimbot. Currently very buggy! Issues: Esp is very buggy (Mostly fixed now), do not change color/refresh esp/change opacity without enabling the feature you are changing first, if you have problems click refresh esp and go from there, chat spammer spams multiple times after reenabling, crosshair sometimes draws over menu when enabled for the first time. \n \n Credits: \n Jcat (Coder) \n All tetesters and mods! \n Anyone I pasted from (Skin changer and Mod weapon)"
 ChangeLog.TextScaled = true
 ChangeLog.TextColor3 = Red
 ChangeLog.Active = true
@@ -657,8 +675,30 @@ AddUICheckBox(FovChangerToggle, "FovChangerToggle", Right, 0.6, "")
 AddUICheckBox(ConsoleToggle, "ConsoleToggle", Left, 0.8, "")
 AddUICheckBox(AimbotToggle, "AimbotToggle", Left, 0.2, "")
 AddUICheckBox(AimbotTeamCheckToggle, "AimbotTeamCheckToggle", Right, 0.2, "✓")
+AddUICheckBox(ThirdPersonToggle, "ThirdPersonToggle", Right, 0.2, "")
+AddUICheckBox(AntiAimToggle, "AntiAimToggle", Left, 0.2, "")
 
 --<Checkbox Functions>--
+AntiAimToggle.MouseButton1Click:Connect(function()
+    AntiAim = not AntiAim
+
+    if AntiAim then
+        AntiAimToggle.Text = "✓"
+    else
+        AntiAimToggle.Text = ""
+    end
+end)
+
+ThirdPersonToggle.MouseButton1Click:Connect(function()
+    ThirdPerson = not ThirdPerson
+
+    if ThirdPerson then
+        ThirdPersonToggle.Text = "✓"
+    else
+        ThirdPersonToggle.Text = ""
+    end
+end)
+
 AimbotToggle.MouseButton1Click:Connect(function()
     AimbotEnabled = not AimbotEnabled
     print(AimbotEnabled)
@@ -1225,8 +1265,46 @@ CreateTextBox(ChamsOpacityTextBox, "ChamsOpacityTextBox", 5, 0.5, 2)
 CreateTextBox(FovChangerTextBox, "FovChangerTextBox", 70, 0.5, 2)
 CreateTextBox(AimbotSmoothing, "AimbotSmoothing", 0, Left, 0.4)
 CreateTextBox(AimbotKeyTextBox, "AimbotKeyTextBox", "e", Right, 0.4)
+CreateTextBox(ThirdPersonDistanceTextBox, "ThirdPersonDistanceTextBox", 10, 0.5, 2)
+CreateTextBox(AntiAimMaxText, "AntiAimMaxText", 360, 0.5, 2)
+CreateTextBox(AntiAimMinText, "AntiAimMinText", -360, 0.5, 2)
 
 --<TextBox Functions>--
+AACheck = true
+
+AntiAimMaxText.FocusLost:Connect(function()
+    AAMaxAngle = tonumber(AntiAimMaxText.Text)
+    if AAMaxAngle > AAMinAngle then
+        CreateNotification("Max angle is "..AAMaxAngle.."", 5)
+        AACheck = true
+    else
+        CreateNotification("Attempt to set AAMaxAngle < AAMinAngle", 5)
+        AACheck = false
+    end
+end)
+AntiAimMinText.FocusLost:Connect(function()
+    AAMinAngle = tonumber(AntiAimMinText.Text)
+    if AAMinAngle < AAMaxAngle then
+        CreateNotification("Min angle is "..AAMinAngle.."", 5)
+        AACheck = true
+    else
+        CreateNotification("Attempt to set AAMinAngle > AAMaxAngle", 5)
+        AACheck = false
+    end
+end)
+
+ThirdPersonDistanceTextBox.FocusLost:Connect(function()
+    if tonumber(ThirdPersonDistanceTextBox.Text) <= 120 then
+        if tonumber(ThirdPersonDistanceTextBox.Text) >= 1 then
+            ThirdPersonDistance = tonumber(ThirdPersonDistanceTextBox.Text)
+        else
+            CreateNotification("Value is under 1!", 5)
+        end
+    else
+        CreateNotification("Value is over 120!", 5)
+    end
+end)
+
 i = 1
 ChamsOpacityTextBox.FocusLost:Connect(function()
     if ChamsOpacityTextBox.Text == "5" then
@@ -1360,6 +1438,11 @@ CreateLabel(AimbotToggleLabel, "AimbotToggleLabel", "Aimbot")
 CreateLabel(AimbotTeamCheckLabel, "AimbotTeamCheckLabel", "Team Check")
 CreateLabel(AimbotSmoothingLabel, "AimbotSmoothingLabel", "Smoothing 0-5")
 CreateLabel(AimbotKeyLabel, "AimbotKeyLabel", "Aimbot Key")
+CreateLabel(ThirdPersonToggleLabel, "ThirdPersonToggleLabel", "Third Person")
+CreateLabel(ThirdPersonDistanceLabel, "ThirdPersonDistanceLabel", "Fov 1-120")
+CreateLabel(AntiAimLabel, "AntiAimLabel", "Anti Aim")
+CreateLabel(AAMALabel, "AAMALabel", "Max Angle")
+CreateLabel(AAMILabel, "AAMILabel", "Min Angle")
 
 function AddUIButton(Variable, vName, PosX, PosY, vText)
     Variable.Name = vName
@@ -2130,6 +2213,32 @@ function TextColorUpdate2()
     AimbotSmoothing.TextColor3 = CurrentText
     AimbotKeyTextBox.TextColor3 = CurrentText
 end
+
+coroutine.wrap(function()
+    while wait() do
+        while AntiAim do
+            if AACheck then
+                Game:GetService("ReplicatedStorage").Events.ControlTurn:FireServer(math.random(AAMinAngle, AAMaxAngle))
+                wait()
+            else
+                wait()
+            end
+        end
+    end
+end)()
+
+coroutine.wrap(function()
+    while wait() do
+        if ThirdPerson then
+            game.Players.LocalPlayer.CameraMode = "Classic"
+            game.Players.LocalPlayer.CameraMaxZoomDistance = ThirdPersonDistance
+            game.Players.LocalPlayer.CameraMinZoomDistance = ThirdPersonDistance
+        else
+            game.Players.LocalPlayer.CameraMaxZoomDistance = 0
+            game.Players.LocalPlayer.CameraMinZoomDistance = 0
+        end
+    end
+end)()
 
 function CrosshairUpdate()
     DrawnCrosshair.ImageColor3 = CrosshairColor
