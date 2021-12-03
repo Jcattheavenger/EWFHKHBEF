@@ -6,7 +6,7 @@ Sound.PlayOnRemove = true
 Sound:Destroy()
 ---<End>---
 
-local Version = "v2.0.0"
+local Version = "v2.0.4"
 
 function CreateNotification(vText, vDuration, vButton)
     game:GetService("StarterGui"):SetCore("SendNotification", {
@@ -124,6 +124,8 @@ local EspChamsLabel = Instance.new("TextLabel",EspChamsToggle)
 local EspHealthBarToggle = Instance.new("TextButton",VisualsTab)
 local EspHealthBarLabel = Instance.new("TextLabel",EspHealthBarToggle)
 local EspRefreshButton = Instance.new("TextButton",VisualsTab)
+local ArmChamsToggle = Instance.new("TextButton",VisualsTab)
+local ArmChamsLabel = Instance.new("TextLabel",ArmChamsToggle)
 
 local RemoveRecoilButton = Instance.new("TextButton",LegitTab)
 
@@ -141,12 +143,14 @@ local CrosshairColorDrop = Instance.new("TextButton",ColorsTab)
 local NameEspColorDrop = Instance.new("TextButton",ColorsTab)
 local BoxEspColorDrop = Instance.new("TextButton",ColorsTab)
 local ChamsEspColorDrop = Instance.new("TextButton",ColorsTab)
+local ArmChamsColorDrop = Instance.new("TextButton",ColorsTab)
 
 local MenuScroll = Instance.new("ScrollingFrame",MenuColorDrop)
 local CrosshairScroll = Instance.new("ScrollingFrame",CrosshairColorDrop)
 local NameEspScroll = Instance.new("ScrollingFrame",NameEspColorDrop)
 local BoxEspScroll = Instance.new("ScrollingFrame",BoxEspColorDrop)
 local ChamsEspScroll = Instance.new("ScrollingFrame",ChamsEspColorDrop)
+local ArmChamsScroll = Instance.new("ScrollingFrame",ArmChamsColorDrop)
 
 local MenuRed = Instance.new("TextButton",MenuScroll)
 local MenuGreen = Instance.new("TextButton",MenuScroll)
@@ -188,6 +192,14 @@ local ChamsOrange = Instance.new("TextButton",ChamsEspScroll)
 local ChamsCyan = Instance.new("TextButton",ChamsEspScroll)
 local ChamsWhite = Instance.new("TextButton",ChamsEspScroll)
 local ChamsBlack = Instance.new("TextButton",ChamsEspScroll)
+
+local ArmChamsRed = Instance.new("TextButton",ArmChamsScroll)
+local ArmChamsGreen = Instance.new("TextButton",ArmChamsScroll)
+local ArmChamsBlue = Instance.new("TextButton",ArmChamsScroll)
+local ArmChamsYellow = Instance.new("TextButton",ArmChamsScroll)
+local ArmChamsPink = Instance.new("TextButton",ArmChamsScroll)
+local ArmChamsWhite = Instance.new("TextButton",ArmChamsScroll)
+local ArmChamsBlack = Instance.new("TextButton",ArmChamsScroll)
 
 local NameEspGui = Instance.new("BillboardGui")
 local NameEsp = Instance.new("TextLabel",NameEspGui)
@@ -260,24 +272,25 @@ local Hours = 0
 local Minutes = 0
 local Seconds = 0
 
-local ChatSpam = false
-local EspEnabled = false
-local BoxEspEnabled = false
-local ChamsEnabled = false
-local HealthEspEnabled = false
-local LightMode = false
-local AimbotEnabled = false
-local AimbotTeamCheck = true
-local AimbotSpeed = 0.01
-local AimbotKey = Enum.KeyCode.E
-local TeamCheck = true
-local CustomFovEnabled = false
-local CustomFov = 70
-local ThirdPerson = false
-local ThirdPersonDistance = 10
-local AntiAim = false
-local AAMaxAngle = 360
-local AAMinAngle = -360
+ChatSpam = false
+EspEnabled = false
+BoxEspEnabled = false
+ChamsEnabled = false
+HealthEspEnabled = false
+LightMode = false
+AimbotEnabled = false
+AimbotTeamCheck = true
+AimbotSpeed = 0.01
+AimbotKey = Enum.KeyCode.E
+TeamCheck = true
+CustomFovEnabled = false
+CustomFov = 70
+ThirdPerson = false
+ThirdPersonDistance = 10
+AntiAim = false
+AAMaxAngle = 360
+AAMinAngle = -360
+ArmChams = false
 
 local NameIndex = 1
 local PosIndex = 0.02
@@ -677,8 +690,19 @@ AddUICheckBox(AimbotToggle, "AimbotToggle", Left, 0.2, "")
 AddUICheckBox(AimbotTeamCheckToggle, "AimbotTeamCheckToggle", Right, 0.2, "✓")
 AddUICheckBox(ThirdPersonToggle, "ThirdPersonToggle", Right, 0.2, "")
 AddUICheckBox(AntiAimToggle, "AntiAimToggle", Left, 0.2, "")
+AddUICheckBox(ArmChamsToggle, "ArmChamsToggle", Right, 0.6, "")
 
 --<Checkbox Functions>--
+ArmChamsToggle.MouseButton1Click:Connect(function()
+    ArmChams = not ArmChams
+
+    if ArmChams then
+        ArmChamsToggle.Text = "✓"
+    else
+        ArmChamsToggle.Text = ""
+    end
+end)
+
 AntiAimToggle.MouseButton1Click:Connect(function()
     AntiAim = not AntiAim
 
@@ -1443,6 +1467,7 @@ CreateLabel(ThirdPersonDistanceLabel, "ThirdPersonDistanceLabel", "Fov 1-120")
 CreateLabel(AntiAimLabel, "AntiAimLabel", "Anti Aim")
 CreateLabel(AAMALabel, "AAMALabel", "Max Angle")
 CreateLabel(AAMILabel, "AAMILabel", "Min Angle")
+CreateLabel(ArmChamsLabel, "ArmChamsLabel", "Arm Chams")
 
 function AddUIButton(Variable, vName, PosX, PosY, vText)
     Variable.Name = vName
@@ -1467,6 +1492,7 @@ AddUIButton(NameEspColorDrop, "NameEspColorDrop", 0.8, 0.4, "Names")
 AddUIButton(BoxEspColorDrop, "BoxEspColorDrop", 0.2, 0.6, "Boxes")
 AddUIButton(ChamsEspColorDrop, "ChamsEspColorDrop", 0.8, 0.6, "Chams")
 AddUIButton(RemoveRecoilButton, "RemoveRecoilButton", 0.2, 0.6, "Remove Recoil")
+AddUIButton(ArmChamsColorDrop, "ArmChamsColorDrop", 0.2, 0.8, "Arm Chams")
 
 function CreateScroll(Variable, vName, vSize)
     Variable.Name = vName
@@ -1486,6 +1512,7 @@ CreateScroll(CrosshairScroll, "CrosshairScroll", 7)
 CreateScroll(NameEspScroll, "NameEspScroll", 7)
 CreateScroll(BoxEspScroll, "BoxEspScroll", 7)
 CreateScroll(ChamsEspScroll, "ChamsEspScroll", 10)
+CreateScroll(ArmChamsScroll, "ArmChamsScroll", 7)
 
 --<Button Functions>--
 RemoveRecoilButton.MouseButton1Click:Connect(function()
@@ -1520,6 +1547,10 @@ end)
 
 ChamsEspColorDrop.MouseButton1Click:Connect(function()
     ChamsEspScroll.Visible = not ChamsEspScroll.Visible
+end)
+
+ArmChamsColorDrop.MouseButton1Click:Connect(function()
+    ArmChamsScroll.Visible = not ArmChamsScroll.Visible
 end)
 --<End>--
 
@@ -1577,6 +1608,14 @@ DropDownElement(ChamsOrange, "ChamsOrange", 0.6, "Orange")
 DropDownElement(ChamsCyan, "ChamsCyan", 0.7, "Cyan")
 DropDownElement(ChamsWhite, "ChamsWhite", 0.8, "White")
 DropDownElement(ChamsBlack, "ChamsBlack", 0.9, "Black")
+
+DropDownElement(ArmChamsRed, "ArmChamsRed", 0, "Red")
+DropDownElement(ArmChamsGreen, "ArmChamsGreen", 0.15, "Green")
+DropDownElement(ArmChamsBlue, "ArmChamsBlue", 0.3, "Blue")
+DropDownElement(ArmChamsYellow, "ArmChamsYellow", 0.45, "Yellow")
+DropDownElement(ArmChamsPink, "ArmChamsPink", 0.6, "Pink")
+DropDownElement(ArmChamsWhite, "ArmChamsWhite", 0.75, "White")
+DropDownElement(ArmChamsBlack, "ArmChamsBlack", 0.9, "Black")
 --<End>--
 
 --<DropDown Element Functions>--
@@ -1771,6 +1810,28 @@ ChamsBlack.MouseButton1Click:Connect(function()
     ChamsColor = Black
     wait(0.5)
     UpdateChams()
+end)
+
+ArmChamsRed.MouseButton1Click:Connect(function()
+    ACSet.ArmColor = Red
+end)
+ArmChamsGreen.MouseButton1Click:Connect(function()
+    ACSet.ArmColor = TrueGreen
+end)
+ArmChamsBlue.MouseButton1Click:Connect(function()
+    ACSet.ArmColor = Blue
+end)
+ArmChamsYellow.MouseButton1Click:Connect(function()
+    ACSet.ArmColor = Yellow
+end)
+ArmChamsPink.MouseButton1Click:Connect(function()
+    ACSet.ArmColor = Pink
+end)
+ArmChamsWhite.MouseButton1Click:Connect(function()
+    ACSet.ArmColor = White
+end)
+ArmChamsBlack.MouseButton1Click:Connect(function()
+    ACSet.ArmColor = Black
 end)
 --<End>--
 
@@ -2361,6 +2422,29 @@ function RefreshBoxEsp()
         EspBoxesToggle.Text = ""
     end
 end
+
+ACSet = {
+    ArmMat = Enum.Material.ForceField,
+    ArmTrans = 0.5,
+    ArmColor = White
+}
+
+coroutine.wrap(function()
+    while wait() do
+        while ArmChams do
+            wait()
+            if game:GetService("Workspace").CurrentCamera:FindFirstChild("Arms") then
+                for _,v in pairs (game:GetService("Workspace").CurrentCamera.Arms:GetDescendants()) do
+                    if v:IsA("Part") or v:IsA("MeshPart") then
+                        v.Material = ACSet.ArmMat
+                        v.Color = ACSet.ArmColor
+                        v.Transparency = ACSet.ArmColor
+                    end
+                end
+            end
+        end
+    end
+end)()
 
 function ChatSpamFunction()
     while ChatSpam do
