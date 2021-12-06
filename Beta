@@ -6,7 +6,7 @@ Sound.PlayOnRemove = true
 Sound:Destroy()
 ---<End>---
 
-local Version = "v2.0.4"
+local Version = "v2.0.8"
 
 function CreateNotification(vText, vDuration, vButton)
     game:GetService("StarterGui"):SetCore("SendNotification", {
@@ -86,6 +86,8 @@ local AimbotSmoothing = Instance.new("TextBox",LegitTab)
 local AimbotSmoothingLabel = Instance.new("TextLabel",AimbotSmoothing)
 local AimbotKeyTextBox = Instance.new("TextBox",LegitTab)
 local AimbotKeyLabel = Instance.new("TextLabel",AimbotKeyTextBox)
+local TriggerBotToggle = Instance.new("TextButton",LegitTab)
+local TriggerBotLabel = Instance.new("TextLabel",TriggerBotToggle)
 
 local AimbotBone = Instance.new("ImageLabel",LegitTab)
 local HeadBone = Instance.new("ImageButton",AimbotBone)
@@ -124,16 +126,14 @@ local EspChamsLabel = Instance.new("TextLabel",EspChamsToggle)
 local EspHealthBarToggle = Instance.new("TextButton",VisualsTab)
 local EspHealthBarLabel = Instance.new("TextLabel",EspHealthBarToggle)
 local EspRefreshButton = Instance.new("TextButton",VisualsTab)
-local ArmChamsToggle = Instance.new("TextButton",VisualsTab)
-local ArmChamsLabel = Instance.new("TextLabel",ArmChamsToggle)
 
-local RemoveRecoilButton = Instance.new("TextButton",LegitTab)
+local RemoveRecoilButton = Instance.new("TextButton",RageTab)
 
 local Crosshair = Instance.new("ScreenGui",Folder)
 local DrawnCrosshair = Instance.new("ImageLabel",Crosshair)
 
-local SkinChangerButton = Instance.new("TextButton",MiscTab)
-local KillAllButton = Instance.new("TextButton",MiscTab)
+local SkinChangerButton = Instance.new("TextButton",RageTab)
+local KillAllButton = Instance.new("TextButton",RageTab)
 
 local LightModeToggle = Instance.new("TextButton",ColorsTab)
 local LightModeLabel = Instance.new("TextLabel",LightModeToggle)
@@ -143,14 +143,12 @@ local CrosshairColorDrop = Instance.new("TextButton",ColorsTab)
 local NameEspColorDrop = Instance.new("TextButton",ColorsTab)
 local BoxEspColorDrop = Instance.new("TextButton",ColorsTab)
 local ChamsEspColorDrop = Instance.new("TextButton",ColorsTab)
-local ArmChamsColorDrop = Instance.new("TextButton",ColorsTab)
 
 local MenuScroll = Instance.new("ScrollingFrame",MenuColorDrop)
 local CrosshairScroll = Instance.new("ScrollingFrame",CrosshairColorDrop)
 local NameEspScroll = Instance.new("ScrollingFrame",NameEspColorDrop)
 local BoxEspScroll = Instance.new("ScrollingFrame",BoxEspColorDrop)
 local ChamsEspScroll = Instance.new("ScrollingFrame",ChamsEspColorDrop)
-local ArmChamsScroll = Instance.new("ScrollingFrame",ArmChamsColorDrop)
 
 local MenuRed = Instance.new("TextButton",MenuScroll)
 local MenuGreen = Instance.new("TextButton",MenuScroll)
@@ -192,14 +190,6 @@ local ChamsOrange = Instance.new("TextButton",ChamsEspScroll)
 local ChamsCyan = Instance.new("TextButton",ChamsEspScroll)
 local ChamsWhite = Instance.new("TextButton",ChamsEspScroll)
 local ChamsBlack = Instance.new("TextButton",ChamsEspScroll)
-
-local ArmChamsRed = Instance.new("TextButton",ArmChamsScroll)
-local ArmChamsGreen = Instance.new("TextButton",ArmChamsScroll)
-local ArmChamsBlue = Instance.new("TextButton",ArmChamsScroll)
-local ArmChamsYellow = Instance.new("TextButton",ArmChamsScroll)
-local ArmChamsPink = Instance.new("TextButton",ArmChamsScroll)
-local ArmChamsWhite = Instance.new("TextButton",ArmChamsScroll)
-local ArmChamsBlack = Instance.new("TextButton",ArmChamsScroll)
 
 local NameEspGui = Instance.new("BillboardGui")
 local NameEsp = Instance.new("TextLabel",NameEspGui)
@@ -290,7 +280,7 @@ ThirdPersonDistance = 10
 AntiAim = false
 AAMaxAngle = 360
 AAMinAngle = -360
-ArmChams = false
+TriggerBot = false
 
 local NameIndex = 1
 local PosIndex = 0.02
@@ -531,6 +521,8 @@ CmdTextBox.FocusLost:Connect(function()
         EspEnabled = false
         ChamsEnabled = false
         AimbotEnabled = false
+        ThirdPersonEnabled = false
+        AntiAim = false
 
     elseif NewLine.Text == "- rainbow" then
 
@@ -612,7 +604,7 @@ ChangeLog.Size = UDim2.new(0, 350, 0, 500)
 ChangeLog.BorderSizePixel = 2
 ChangeLog.BackgroundColor3 = White
 ChangeLog.BorderColor3 = Black
-ChangeLog.Text = "Ninelives "..Version.." \n Built 12.2.21 \n \n Major code optimization, added console, added HomeFrame, major debugging, added chat spammer fix for counter blox, added loading system with whitelists, esp is almost finished, made boxes way thicker, added change log, removed bananna knife due to detection, working on aimbot. Currently very buggy! Issues: Esp is very buggy (Mostly fixed now), do not change color/refresh esp/change opacity without enabling the feature you are changing first, if you have problems click refresh esp and go from there, chat spammer spams multiple times after reenabling, crosshair sometimes draws over menu when enabled for the first time. \n \n Credits: \n Jcat (Coder) \n All tetesters and mods! \n Anyone I pasted from (Skin changer and Mod weapon)"
+ChangeLog.Text = "Ninelives "..Version.." \n Built 12.6.21 \n \n Major code optimization, added console, added HomeFrame, major debugging, added chat spammer fix for counter blox, added loading system with whitelists, esp is almost finished, made boxes way thicker, added change log, removed bananna knife due to detection, working on aimbot. Currently very buggy! Issues: Esp is very buggy (Mostly fixed now), do not change color/refresh esp/change opacity without enabling the feature you are changing first, if you have problems click refresh esp and go from there, chat spammer spams multiple times after reenabling, crosshair sometimes draws over menu when enabled for the first time. \n \n Credits: \n Jcat (Coder) \n All tetesters and mods! \n Anyone I pasted from (Skin changer and Mod weapon)"
 ChangeLog.TextScaled = true
 ChangeLog.TextColor3 = Red
 ChangeLog.Active = true
@@ -684,22 +676,22 @@ AddUICheckBox(EspTeamToggle, "EspTeamToggle", Right, 0.2, "✓")
 AddUICheckBox(EspBoxesToggle, "EspBoxesToggle", Left, 0.4, "")
 AddUICheckBox(EspChamsToggle, "EspChamsToggle", Right, 0.4, "")
 AddUICheckBox(EspHealthBarToggle, "EspHealthBarToggle", Left, 0.6, "")
-AddUICheckBox(FovChangerToggle, "FovChangerToggle", Right, 0.6, "")
-AddUICheckBox(ConsoleToggle, "ConsoleToggle", Left, 0.8, "")
+AddUICheckBox(FovChangerToggle, "FovChangerToggle", Right, 0.4, "")
+AddUICheckBox(ConsoleToggle, "ConsoleToggle", Left, 0.6, "")
 AddUICheckBox(AimbotToggle, "AimbotToggle", Left, 0.2, "")
 AddUICheckBox(AimbotTeamCheckToggle, "AimbotTeamCheckToggle", Right, 0.2, "✓")
 AddUICheckBox(ThirdPersonToggle, "ThirdPersonToggle", Right, 0.2, "")
 AddUICheckBox(AntiAimToggle, "AntiAimToggle", Left, 0.2, "")
-AddUICheckBox(ArmChamsToggle, "ArmChamsToggle", Right, 0.6, "")
+AddUICheckBox(TriggerBotToggle, "TriggerBotToggle", Left, 0.6, "")
 
 --<Checkbox Functions>--
-ArmChamsToggle.MouseButton1Click:Connect(function()
-    ArmChams = not ArmChams
+TriggerBotToggle.MouseButton1Click:Connect(function()
+    TriggerBot = not TriggerBot
 
-    if ArmChams then
-        ArmChamsToggle.Text = "✓"
+    if TriggerBot then
+        TriggerBotToggle.Text = "✓"
     else
-        ArmChamsToggle.Text = ""
+        TriggerBotToggle.Text = ""
     end
 end)
 
@@ -762,7 +754,7 @@ game:GetService("RunService").RenderStepped:Connect(function()
     local distance = math.huge
     local target = nil
 
-        if AimbotEnabled then
+    if AimbotEnabled then
         if AimbotSettings.Aiming then
             for _,v in pairs (game:GetService("Players"):GetChildren()) do
                 if AimbotSettings.TeamCheck then
@@ -807,12 +799,12 @@ game:GetService("RunService").RenderStepped:Connect(function()
 
         if target ~= nil and target:FindFirstChild("Humanoid") and target:FindFirstChild("Head") then
             if target:FindFirstChild("Humanoid").Health > 0 then
-
                 local Tween = game.TweenService:create(game.Workspace.CurrentCamera, TweenInfo.new(AimbotSettings.AimbotSpeed), {CFrame = CFrame.new(game.Workspace.CurrentCamera.CFrame.Position, target[ActiveBone].Position)})
                 Tween:Play()
                 UserInputService.InputEnded:Connect(function(Input)
                     if Input.KeyCode == Enum.KeyCode.E then
-                        Tween:Cancel() return end
+                        Tween:Cancel() return
+                    end
                 end)
             end
         end
@@ -1467,7 +1459,7 @@ CreateLabel(ThirdPersonDistanceLabel, "ThirdPersonDistanceLabel", "Fov 1-120")
 CreateLabel(AntiAimLabel, "AntiAimLabel", "Anti Aim")
 CreateLabel(AAMALabel, "AAMALabel", "Max Angle")
 CreateLabel(AAMILabel, "AAMILabel", "Min Angle")
-CreateLabel(ArmChamsLabel, "ArmChamsLabel", "Arm Chams")
+CreateLabel(TriggerBotLabel, "TriggerBotLabel", "Trigger Bot")
 
 function AddUIButton(Variable, vName, PosX, PosY, vText)
     Variable.Name = vName
@@ -1484,15 +1476,14 @@ function AddUIButton(Variable, vName, PosX, PosY, vText)
     Variable.Text = vText
 end
 
-AddUIButton(SkinChangerButton, "SkinChangerButton", 0.8, 0.4, "Skin Changer")
-AddUIButton(KillAllButton, "KillAllButton", 0.2, 0.6, "Mod Weapon")
+AddUIButton(SkinChangerButton, "SkinChangerButton", 0.2, 0.6, "Skin Changer")
+AddUIButton(KillAllButton, "KillAllButton", 0.8, 0.4, "Mod Weapon")
 AddUIButton(MenuColorDrop, "MenuColorDrop", 0.2, 0.2, "Menu Color")
 AddUIButton(CrosshairColorDrop, "CrosshairColorDrop", 0.8, 0.2, "Crosshair")
 AddUIButton(NameEspColorDrop, "NameEspColorDrop", 0.8, 0.4, "Names")
 AddUIButton(BoxEspColorDrop, "BoxEspColorDrop", 0.2, 0.6, "Boxes")
 AddUIButton(ChamsEspColorDrop, "ChamsEspColorDrop", 0.8, 0.6, "Chams")
-AddUIButton(RemoveRecoilButton, "RemoveRecoilButton", 0.2, 0.6, "Remove Recoil")
-AddUIButton(ArmChamsColorDrop, "ArmChamsColorDrop", 0.2, 0.8, "Arm Chams")
+AddUIButton(RemoveRecoilButton, "RemoveRecoilButton", 0.2, 0.4, "Remove Recoil")
 
 function CreateScroll(Variable, vName, vSize)
     Variable.Name = vName
@@ -1512,7 +1503,6 @@ CreateScroll(CrosshairScroll, "CrosshairScroll", 7)
 CreateScroll(NameEspScroll, "NameEspScroll", 7)
 CreateScroll(BoxEspScroll, "BoxEspScroll", 7)
 CreateScroll(ChamsEspScroll, "ChamsEspScroll", 10)
-CreateScroll(ArmChamsScroll, "ArmChamsScroll", 7)
 
 --<Button Functions>--
 RemoveRecoilButton.MouseButton1Click:Connect(function()
@@ -1547,10 +1537,6 @@ end)
 
 ChamsEspColorDrop.MouseButton1Click:Connect(function()
     ChamsEspScroll.Visible = not ChamsEspScroll.Visible
-end)
-
-ArmChamsColorDrop.MouseButton1Click:Connect(function()
-    ArmChamsScroll.Visible = not ArmChamsScroll.Visible
 end)
 --<End>--
 
@@ -1608,14 +1594,6 @@ DropDownElement(ChamsOrange, "ChamsOrange", 0.6, "Orange")
 DropDownElement(ChamsCyan, "ChamsCyan", 0.7, "Cyan")
 DropDownElement(ChamsWhite, "ChamsWhite", 0.8, "White")
 DropDownElement(ChamsBlack, "ChamsBlack", 0.9, "Black")
-
-DropDownElement(ArmChamsRed, "ArmChamsRed", 0, "Red")
-DropDownElement(ArmChamsGreen, "ArmChamsGreen", 0.15, "Green")
-DropDownElement(ArmChamsBlue, "ArmChamsBlue", 0.3, "Blue")
-DropDownElement(ArmChamsYellow, "ArmChamsYellow", 0.45, "Yellow")
-DropDownElement(ArmChamsPink, "ArmChamsPink", 0.6, "Pink")
-DropDownElement(ArmChamsWhite, "ArmChamsWhite", 0.75, "White")
-DropDownElement(ArmChamsBlack, "ArmChamsBlack", 0.9, "Black")
 --<End>--
 
 --<DropDown Element Functions>--
@@ -1810,28 +1788,6 @@ ChamsBlack.MouseButton1Click:Connect(function()
     ChamsColor = Black
     wait(0.5)
     UpdateChams()
-end)
-
-ArmChamsRed.MouseButton1Click:Connect(function()
-    ACSet.ArmColor = Red
-end)
-ArmChamsGreen.MouseButton1Click:Connect(function()
-    ACSet.ArmColor = TrueGreen
-end)
-ArmChamsBlue.MouseButton1Click:Connect(function()
-    ACSet.ArmColor = Blue
-end)
-ArmChamsYellow.MouseButton1Click:Connect(function()
-    ACSet.ArmColor = Yellow
-end)
-ArmChamsPink.MouseButton1Click:Connect(function()
-    ACSet.ArmColor = Pink
-end)
-ArmChamsWhite.MouseButton1Click:Connect(function()
-    ACSet.ArmColor = White
-end)
-ArmChamsBlack.MouseButton1Click:Connect(function()
-    ACSet.ArmColor = Black
 end)
 --<End>--
 
@@ -2277,6 +2233,34 @@ end
 
 coroutine.wrap(function()
     while wait() do
+        if AimbotEnabled then
+            if TriggerBot then
+                local player = game:GetService("Players").LocalPlayer
+                local mouse = player:GetMouse()
+                if player:GetMouse().Target then
+                    if TeamCheck then
+                        while TriggerBot do
+                            if player:GetMouse().Target.Parent:FindFirstChild("Humanoid") and player:GetMouse().Target.Parent.Name ~= player.Name then
+                                mouse1press() wait() mouse1release()
+                            end
+                            wait()
+                        end
+                    else
+                        while TriggerBot do
+                            if player:GetMouse().Target.Parent:FindFirstChild("Humanoid") and player:GetMouse().Target.Parent.Name ~= player.Name then
+                                mouse1press() wait() mouse1release()
+                            end
+                            wait()
+                        end
+                    end
+                end
+            end
+        end
+    end
+end)()
+
+coroutine.wrap(function()
+    while wait() do
         while AntiAim do
             if AACheck then
                 Game:GetService("ReplicatedStorage").Events.ControlTurn:FireServer(math.random(AAMinAngle, AAMaxAngle))
@@ -2291,9 +2275,19 @@ end)()
 coroutine.wrap(function()
     while wait() do
         if ThirdPerson then
-            game.Players.LocalPlayer.CameraMode = "Classic"
-            game.Players.LocalPlayer.CameraMaxZoomDistance = ThirdPersonDistance
-            game.Players.LocalPlayer.CameraMinZoomDistance = ThirdPersonDistance
+            while ThirdPerson do
+                game.Players.LocalPlayer.CameraMode = "Classic"
+                game.Players.LocalPlayer.CameraMaxZoomDistance = ThirdPersonDistance
+                game.Players.LocalPlayer.CameraMinZoomDistance = ThirdPersonDistance
+                if game:GetService("Workspace").CurrentCamera:FindFirstChild("Arms") then
+                    for _,v in pairs (game:GetService("Workspace").CurrentCamera.Arms:GetDescendants()) do
+                        if v:IsA("Part") or v:IsA("MeshPart") then
+                            v.Transparency = 1
+                        end
+                    end
+                end
+                wait()
+            end
         else
             game.Players.LocalPlayer.CameraMaxZoomDistance = 0
             game.Players.LocalPlayer.CameraMinZoomDistance = 0
@@ -2422,29 +2416,6 @@ function RefreshBoxEsp()
         EspBoxesToggle.Text = ""
     end
 end
-
-ACSet = {
-    ArmMat = Enum.Material.ForceField,
-    ArmTrans = 0.5,
-    ArmColor = White
-}
-
-coroutine.wrap(function()
-    while wait() do
-        while ArmChams do
-            wait()
-            if game:GetService("Workspace").CurrentCamera:FindFirstChild("Arms") then
-                for _,v in pairs (game:GetService("Workspace").CurrentCamera.Arms:GetDescendants()) do
-                    if v:IsA("Part") or v:IsA("MeshPart") then
-                        v.Material = ACSet.ArmMat
-                        v.Color = ACSet.ArmColor
-                        v.Transparency = ACSet.ArmColor
-                    end
-                end
-            end
-        end
-    end
-end)()
 
 function ChatSpamFunction()
     while ChatSpam do
